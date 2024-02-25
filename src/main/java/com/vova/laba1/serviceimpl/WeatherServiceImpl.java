@@ -32,7 +32,7 @@ public class WeatherServiceImpl implements WeatherService {
             return responseBody[0];
         } else {
             // Обработка случая, когда ответ от API пустой или null
-            return null; // или бросить исключение, в зависимости от логики вашего приложения
+            return null;
         }
     }
 
