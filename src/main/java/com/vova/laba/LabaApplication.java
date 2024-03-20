@@ -1,13 +1,13 @@
-package com.vova.laba1;
+package com.vova.laba;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Laba1Application {
+public class LabaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Laba1Application.class, args);
+		SpringApplication.run(LabaApplication.class, args);
 	}
 
 }

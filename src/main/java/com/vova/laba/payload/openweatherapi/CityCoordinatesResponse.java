@@ -1,4 +1,4 @@
-package com.vova.laba1.payload;
+package com.vova.laba.payload.openweatherapi;
 
 import lombok.Data;
 
