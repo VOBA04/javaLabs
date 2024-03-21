@@ -3,6 +3,7 @@ package com.vova.laba.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,7 +29,7 @@ public class User {
     @Column(name = "username")
     private String name;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.MERGE)
     @EqualsAndHashCode.Exclude
     private Set<City> cities = new HashSet<>();
 
