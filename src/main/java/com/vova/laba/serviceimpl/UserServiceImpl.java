@@ -74,23 +74,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDisplayDTO addCityToUser(Long userId, Long cityId) {
+    public Optional<UserDisplayDTO> addCityToUser(Long userId, Long cityId) {
         User user = userRepository.findById(userId).orElse(null);
         City city = cityRepository.findById(cityId).orElse(null);
         if (user != null && city != null) {
             user.addCity(city);
-            return modelMapper.map(userRepository.save(user), UserDisplayDTO.class);
+            return Optional.of(modelMapper.map(userRepository.save(user), UserDisplayDTO.class));
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public UserDisplayDTO removeCityFromUser(Long userId, Long cityId) {
+    public Optional<UserDisplayDTO> removeCityFromUser(Long userId, Long cityId) {
         User user = userRepository.findById(userId).orElse(null);
         if (user != null) {
             user.deleteCity(cityId);
-            return modelMapper.map(userRepository.save(user), UserDisplayDTO.class);
+            return Optional.of(modelMapper.map(userRepository.save(user), UserDisplayDTO.class));
         }
-        return null;
+        return Optional.empty();
     }
 }

@@ -1,8 +1,8 @@
 package com.vova.laba.controller;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,30 +25,31 @@ public class WeatherApiController {
 
     @GetMapping("/curr")
     public ResponseEntity<WeatherInfoDTO> getWeather(@RequestParam(value = "city") String city) {
-        WeatherInfoDTO weatherResponse = weatherApiService.getWeather(weatherApiService.getCoordinates(city));
-        return new ResponseEntity<>(weatherResponse, HttpStatus.OK);
+        return ResponseEntity.of(weatherApiService.getWeather(weatherApiService.getCoordinates(city)));
     }
 
     @GetMapping("/days")
     public ResponseEntity<List<WeatherInfoDTO>> getFiveDaysWeather(@RequestParam(value = "city") String city) {
-        List<WeatherInfoDTO> weatherResponses = weatherApiService
-                .getFiveDaysWeather(weatherApiService.getCoordinates(city));
-        return new ResponseEntity<>(weatherResponses, HttpStatus.OK);
+        return ResponseEntity.of(weatherApiService.getFiveDaysWeather(weatherApiService.getCoordinates(city)));
     }
 
     @GetMapping("/db/curr")
     public ResponseEntity<WeatherInfoDTO> getWeatherToDatabase(@RequestParam(value = "city") String city) {
-        WeatherInfoDTO weatherResponse = weatherApiService.getWeather(weatherApiService.getCoordinates(city));
-        weatherApiService.addToDatabase(new CityInfoDTO(city), weatherResponse);
-        return new ResponseEntity<>(weatherResponse, HttpStatus.OK);
+        Optional<WeatherInfoDTO> weatherResponse = weatherApiService.getWeather(weatherApiService.getCoordinates(city));
+        if (weatherResponse.isPresent()) {
+            weatherApiService.addToDatabase(new CityInfoDTO(city), weatherResponse.get());
+        }
+        return ResponseEntity.of(weatherResponse);
     }
 
     @GetMapping("/db/days")
     public ResponseEntity<List<WeatherInfoDTO>> getFiveDaysWeatherToDatabase(
             @RequestParam(value = "city") String city) {
-        List<WeatherInfoDTO> weatherResponses = weatherApiService
+        Optional<List<WeatherInfoDTO>> weatherResponses = weatherApiService
                 .getFiveDaysWeather(weatherApiService.getCoordinates(city));
-        weatherApiService.addToDatabase(new CityInfoDTO(city), weatherResponses);
-        return new ResponseEntity<>(weatherResponses, HttpStatus.OK);
+        if (weatherResponses.isPresent()) {
+            weatherApiService.addToDatabase(new CityInfoDTO(city), weatherResponses.get());
+        }
+        return ResponseEntity.of(weatherResponses);
     }
 }

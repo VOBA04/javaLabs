@@ -2,11 +2,11 @@ package com.vova.laba.serviceimpl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,7 +62,10 @@ public class WeatherApiServiceImpl implements WeatherApiService {
     }
 
     @Override
-    public WeatherInfoDTO getWeather(CityCoordinatesResponse coord) {
+    public Optional<WeatherInfoDTO> getWeather(CityCoordinatesResponse coord) {
+        if (coord == null) {
+            return Optional.empty();
+        }
         String apiUrl = "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={key}&units=metric";
         RestTemplate restTemplate = new RestTemplate();
         Map<String, String> uriVariables = new HashMap<>();
@@ -82,14 +85,17 @@ public class WeatherApiServiceImpl implements WeatherApiService {
             weatherResponse.setClouds(responseBody.getClouds().getAll());
             String date = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date(responseBody.getDt() * 1000));
             weatherResponse.setDate(WeatherDate.stringToDate(date));
-            return weatherResponse;
-        } else {
-            return null;
+            return Optional.of(weatherResponse);
         }
+        return Optional.empty();
+
     }
 
     @Override
-    public List<WeatherInfoDTO> getFiveDaysWeather(CityCoordinatesResponse coord) {
+    public Optional<List<WeatherInfoDTO>> getFiveDaysWeather(CityCoordinatesResponse coord) {
+        if (coord == null) {
+            return Optional.empty();
+        }
         String apiUrl = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={key}&units=metric";
         RestTemplate restTemplate = new RestTemplate();
         Map<String, String> uriVariables = new HashMap<>();
@@ -116,10 +122,10 @@ public class WeatherApiServiceImpl implements WeatherApiService {
                     weatherResponse.setDate(WeatherDate.stringToDate(date));
                     weatherResponses.add(weatherResponse);
                 }
-                return weatherResponses;
+                return Optional.of(weatherResponses);
             }
         }
-        return Collections.emptyList();
+        return Optional.empty();
     }
 
     @Override

@@ -8,5 +8,5 @@ import lombok.EqualsAndHashCode;
 public class WeatherDisplayDTO extends WeatherInfoDTO {
 
     private Long id;
-    private WeatherCityDTO city = new WeatherCityDTO();
+    private WeatherCityInfoDTO city = new WeatherCityInfoDTO();
 }

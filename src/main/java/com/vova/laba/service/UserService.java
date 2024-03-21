@@ -18,7 +18,7 @@ public interface UserService {
 
     public boolean deleteUser(Long id);
 
-    public UserDisplayDTO addCityToUser(Long userId, Long cityId);
+    public Optional<UserDisplayDTO> addCityToUser(Long userId, Long cityId);
 
-    public UserDisplayDTO removeCityFromUser(Long userId, Long cityId);
+    public Optional<UserDisplayDTO> removeCityFromUser(Long userId, Long cityId);
 }

@@ -56,22 +56,14 @@ public class UserController {
     }
 
     @PostMapping("/add_city")
-    public ResponseEntity<Void> addCityToUser(@RequestParam(value = "user_id") Long userId,
+    public ResponseEntity<UserDisplayDTO> addCityToUser(@RequestParam(value = "user_id") Long userId,
             @RequestParam(value = "city_id") Long cityId) {
-        UserDisplayDTO user = userService.addCityToUser(userId, cityId);
-        if (user == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.of(userService.addCityToUser(userId, cityId));
     }
 
     @DeleteMapping("/remove_city")
-    public ResponseEntity<Void> removeCityFromUser(@RequestParam(value = "user_id") Long userId,
+    public ResponseEntity<UserDisplayDTO> removeCityFromUser(@RequestParam(value = "user_id") Long userId,
             @RequestParam(value = "city_id") Long cityId) {
-        UserDisplayDTO user = userService.removeCityFromUser(userId, cityId);
-        if (user == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.of(userService.removeCityFromUser(userId, cityId));
     }
 }
