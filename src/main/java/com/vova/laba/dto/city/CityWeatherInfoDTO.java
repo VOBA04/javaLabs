@@ -1,6 +1,6 @@
-package com.vova.laba.DTO.city;
+package com.vova.laba.dto.city;
 
-import com.vova.laba.DTO.weather.WeatherInfoDTO;
+import com.vova.laba.dto.weather.WeatherInfoDTO;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

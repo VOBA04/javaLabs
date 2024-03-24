@@ -1,4 +1,4 @@
-package com.vova.laba.DTO.openweatherapi;
+package com.vova.laba.dto.openweatherapi;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

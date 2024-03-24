@@ -5,15 +5,17 @@ import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.vova.laba.DTO.user.UserDisplayDTO;
-import com.vova.laba.DTO.user.UserInfoDTO;
+import com.vova.laba.dto.user.UserDisplayDTO;
+import com.vova.laba.dto.user.UserInfoDTO;
 import com.vova.laba.model.City;
 import com.vova.laba.model.User;
 import com.vova.laba.repository.CityRepository;
 import com.vova.laba.repository.UserRepository;
 import com.vova.laba.service.UserService;
+import com.vova.laba.utils.cache.GenericCache;
 
 import jakarta.transaction.Transactional;
 
@@ -26,10 +28,15 @@ public class UserServiceImpl implements UserService {
 
     private ModelMapper modelMapper;
 
-    public UserServiceImpl(UserRepository userRepository, CityRepository cityrRepository, ModelMapper modelMapper) {
+    private GenericCache<Long, User> cache;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, CityRepository cityrRepository, ModelMapper modelMapper,
+            GenericCache<Long, User> cache) {
         this.userRepository = userRepository;
         this.cityRepository = cityrRepository;
         this.modelMapper = modelMapper;
+        this.cache = cache;
     }
 
     @Override
@@ -43,10 +50,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDisplayDTO> getUserById(Long id) {
-        User user = userRepository.findById(id).orElse(null);
+        User user = cache.get(id).orElseGet(() -> userRepository.findById(id).orElse(null));
         if (user == null) {
             return Optional.empty();
         }
+        cache.put(id, user);
         return Optional.of(modelMapper.map(user, UserDisplayDTO.class));
     }
 
@@ -59,6 +67,7 @@ public class UserServiceImpl implements UserService {
     public UserDisplayDTO updateUser(Long id, UserInfoDTO user) {
         User userModel = modelMapper.map(user, User.class);
         userModel.setId(id);
+        cache.remove(id);
         return modelMapper.map(userRepository.save(userModel), UserDisplayDTO.class);
     }
 
@@ -68,6 +77,7 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
             user.getCities().forEach(city -> city.deleteUser(id));
             userRepository.deleteById(id);
+            cache.remove(id);
             return true;
         }
         return false;
@@ -75,10 +85,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDisplayDTO> addCityToUser(Long userId, Long cityId) {
-        User user = userRepository.findById(userId).orElse(null);
+        User user = cache.get(userId).orElseGet(() -> userRepository.findById(userId).orElse(null));
         City city = cityRepository.findById(cityId).orElse(null);
         if (user != null && city != null) {
             user.addCity(city);
+            cache.put(userId, user);
             return Optional.of(modelMapper.map(userRepository.save(user), UserDisplayDTO.class));
         }
         return Optional.empty();
@@ -86,8 +97,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDisplayDTO> removeCityFromUser(Long userId, Long cityId) {
-        User user = userRepository.findById(userId).orElse(null);
+        User user = cache.get(userId).orElseGet(() -> userRepository.findById(userId).orElse(null));
         if (user != null) {
+            cache.put(userId, user);
             user.deleteCity(cityId);
             return Optional.of(modelMapper.map(userRepository.save(user), UserDisplayDTO.class));
         }

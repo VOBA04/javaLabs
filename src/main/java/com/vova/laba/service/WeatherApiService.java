@@ -3,9 +3,9 @@ package com.vova.laba.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.vova.laba.DTO.city.CityInfoDTO;
-import com.vova.laba.DTO.openweatherapi.CityCoordinatesResponse;
-import com.vova.laba.DTO.weather.WeatherInfoDTO;
+import com.vova.laba.dto.city.CityInfoDTO;
+import com.vova.laba.dto.openweatherapi.CityCoordinatesResponse;
+import com.vova.laba.dto.weather.WeatherInfoDTO;
 
 public interface WeatherApiService {
 

@@ -9,19 +9,20 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.vova.laba.DTO.city.CityDisplayDTO;
-import com.vova.laba.DTO.city.CityInfoDTO;
-import com.vova.laba.DTO.openweatherapi.CityCoordinatesResponse;
-import com.vova.laba.DTO.openweatherapi.OpenWeatherFiveDaysReport;
-import com.vova.laba.DTO.openweatherapi.OpenWeatherReport;
-import com.vova.laba.DTO.openweatherapi.WeatherDate;
-import com.vova.laba.DTO.weather.WeatherCreateDTO;
-import com.vova.laba.DTO.weather.WeatherInfoDTO;
+import com.vova.laba.dto.city.CityDisplayDTO;
+import com.vova.laba.dto.city.CityInfoDTO;
+import com.vova.laba.dto.openweatherapi.CityCoordinatesResponse;
+import com.vova.laba.dto.openweatherapi.OpenWeatherFiveDaysReport;
+import com.vova.laba.dto.openweatherapi.OpenWeatherReport;
+import com.vova.laba.dto.openweatherapi.WeatherDate;
+import com.vova.laba.dto.weather.WeatherCreateDTO;
+import com.vova.laba.dto.weather.WeatherInfoDTO;
 import com.vova.laba.service.CityService;
 import com.vova.laba.service.WeatherApiService;
 import com.vova.laba.service.WeatherService;
@@ -37,6 +38,7 @@ public class WeatherApiServiceImpl implements WeatherApiService {
     private final WeatherService weatherService;
     private final ModelMapper modelMapper;
 
+    @Autowired
     public WeatherApiServiceImpl(CityService cityService, WeatherService weatherService, ModelMapper modelMapper) {
         this.cityService = cityService;
         this.weatherService = weatherService;

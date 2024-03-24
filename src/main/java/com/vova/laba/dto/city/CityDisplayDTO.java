@@ -1,4 +1,4 @@
-package com.vova.laba.DTO.city;
+package com.vova.laba.dto.city;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

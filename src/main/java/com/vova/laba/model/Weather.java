@@ -1,6 +1,6 @@
 package com.vova.laba.model;
 
-import com.vova.laba.DTO.openweatherapi.WeatherDate;
+import com.vova.laba.dto.openweatherapi.WeatherDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

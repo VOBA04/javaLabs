@@ -3,9 +3,9 @@ package com.vova.laba.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.vova.laba.DTO.city.CityDispalyWithWeather;
-import com.vova.laba.DTO.city.CityDisplayDTO;
-import com.vova.laba.DTO.city.CityInfoDTO;
+import com.vova.laba.dto.city.CityDispalyWithWeather;
+import com.vova.laba.dto.city.CityDisplayDTO;
+import com.vova.laba.dto.city.CityInfoDTO;
 
 public interface CityService {
 
@@ -20,4 +20,6 @@ public interface CityService {
     public boolean deleteCity(Long id);
 
     public Optional<CityDispalyWithWeather> getAllCityWeather(Long cityId);
+
+    public Optional<CityDispalyWithWeather> getCityWeatherByTemperature(Long cityId, Float minTemp, Float maxTemp);
 }

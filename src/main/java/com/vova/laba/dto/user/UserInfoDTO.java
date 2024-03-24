@@ -1,4 +1,4 @@
-package com.vova.laba.DTO.user;
+package com.vova.laba.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

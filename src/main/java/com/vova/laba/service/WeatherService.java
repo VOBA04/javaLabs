@@ -3,8 +3,8 @@ package com.vova.laba.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.vova.laba.DTO.weather.WeatherCreateDTO;
-import com.vova.laba.DTO.weather.WeatherDisplayDTO;
+import com.vova.laba.dto.weather.WeatherCreateDTO;
+import com.vova.laba.dto.weather.WeatherDisplayDTO;
 
 public interface WeatherService {
 

@@ -3,8 +3,8 @@ package com.vova.laba.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.vova.laba.DTO.user.UserDisplayDTO;
-import com.vova.laba.DTO.user.UserInfoDTO;
+import com.vova.laba.dto.user.UserDisplayDTO;
+import com.vova.laba.dto.user.UserInfoDTO;
 
 public interface UserService {
 

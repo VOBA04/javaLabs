@@ -5,13 +5,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.vova.laba.DTO.weather.WeatherCreateDTO;
-import com.vova.laba.DTO.weather.WeatherDisplayDTO;
+import com.vova.laba.dto.weather.WeatherCreateDTO;
+import com.vova.laba.dto.weather.WeatherDisplayDTO;
 import com.vova.laba.model.Weather;
 import com.vova.laba.repository.WeatherRepository;
 import com.vova.laba.service.WeatherService;
+import com.vova.laba.utils.cache.GenericCache;
 
 import jakarta.transaction.Transactional;
 
@@ -23,9 +25,14 @@ public class WeatherServiceImpl implements WeatherService {
 
     private ModelMapper modelMapper;
 
-    public WeatherServiceImpl(WeatherRepository weatherRepository, ModelMapper modelMapper) {
+    private GenericCache<Long, Weather> cache;
+
+    @Autowired
+    public WeatherServiceImpl(WeatherRepository weatherRepository, ModelMapper modelMapper,
+            GenericCache<Long, Weather> cache) {
         this.weatherRepository = weatherRepository;
         this.modelMapper = modelMapper;
+        this.cache = cache;
     }
 
     @Override
@@ -39,10 +46,11 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     public Optional<WeatherDisplayDTO> getWeatherById(Long id) {
-        Weather weather = weatherRepository.findById(id).orElse(null);
+        Weather weather = cache.get(id).orElseGet(() -> weatherRepository.findById(id).orElse(null));
         if (weather == null) {
             return Optional.empty();
         }
+        cache.put(id, weather);
         return Optional.of(modelMapper.map(weather, WeatherDisplayDTO.class));
     }
 
@@ -56,6 +64,7 @@ public class WeatherServiceImpl implements WeatherService {
     public WeatherDisplayDTO updateWeather(Long id, WeatherCreateDTO weather) {
         Weather weatherModel = modelMapper.map(weather, Weather.class);
         weatherModel.setId(id);
+        cache.remove(id);
         return modelMapper.map(weatherRepository.save(weatherModel), WeatherDisplayDTO.class);
     }
 
@@ -64,6 +73,7 @@ public class WeatherServiceImpl implements WeatherService {
         Weather weather = weatherRepository.findById(id).orElse(null);
         if (weather != null) {
             weatherRepository.deleteById(id);
+            cache.remove(id);
             return true;
         }
         return false;

@@ -33,7 +33,7 @@ public class City {
     @Column(name = "cityName", unique = true)
     private String cityName;
 
-    @OneToMany(mappedBy = "city", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "city", cascade = { CascadeType.REMOVE, CascadeType.MERGE })
     private List<Weather> weather;
 
     @ManyToMany
