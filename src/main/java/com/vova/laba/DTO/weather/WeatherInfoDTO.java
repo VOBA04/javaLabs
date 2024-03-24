@@ -1,6 +1,6 @@
-package com.vova.laba.payload.weather;
+package com.vova.laba.DTO.weather;
 
-import com.vova.laba.payload.openweatherapi.WeatherDate;
+import com.vova.laba.DTO.openweatherapi.WeatherDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

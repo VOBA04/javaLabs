@@ -7,9 +7,9 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.vova.laba.DTO.weather.WeatherCreateDTO;
+import com.vova.laba.DTO.weather.WeatherDisplayDTO;
 import com.vova.laba.model.Weather;
-import com.vova.laba.payload.weather.WeatherCreateDTO;
-import com.vova.laba.payload.weather.WeatherDisplayDTO;
 import com.vova.laba.repository.WeatherRepository;
 import com.vova.laba.service.WeatherService;
 

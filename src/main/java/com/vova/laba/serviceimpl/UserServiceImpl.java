@@ -7,10 +7,10 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.vova.laba.DTO.user.UserDisplayDTO;
+import com.vova.laba.DTO.user.UserInfoDTO;
 import com.vova.laba.model.City;
 import com.vova.laba.model.User;
-import com.vova.laba.payload.user.UserDisplayDTO;
-import com.vova.laba.payload.user.UserInfoDTO;
 import com.vova.laba.repository.CityRepository;
 import com.vova.laba.repository.UserRepository;
 import com.vova.laba.service.UserService;

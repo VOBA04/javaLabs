@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vova.laba.payload.city.CityDispalyWithWeather;
-import com.vova.laba.payload.city.CityDisplayDTO;
-import com.vova.laba.payload.city.CityInfoDTO;
+import com.vova.laba.DTO.city.CityDispalyWithWeather;
+import com.vova.laba.DTO.city.CityDisplayDTO;
+import com.vova.laba.DTO.city.CityInfoDTO;
 import com.vova.laba.service.CityService;
 
 @RestController

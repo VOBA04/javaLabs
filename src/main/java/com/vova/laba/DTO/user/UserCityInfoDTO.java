@@ -1,4 +1,4 @@
-package com.vova.laba.payload.user;
+package com.vova.laba.DTO.user;
 
 import lombok.Data;
 

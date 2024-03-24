@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vova.laba.payload.city.CityInfoDTO;
-import com.vova.laba.payload.weather.WeatherInfoDTO;
+import com.vova.laba.DTO.city.CityInfoDTO;
+import com.vova.laba.DTO.weather.WeatherInfoDTO;
 import com.vova.laba.service.WeatherApiService;
 
 @RestController

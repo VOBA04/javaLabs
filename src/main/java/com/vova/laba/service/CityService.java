@@ -3,9 +3,9 @@ package com.vova.laba.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.vova.laba.payload.city.CityDispalyWithWeather;
-import com.vova.laba.payload.city.CityDisplayDTO;
-import com.vova.laba.payload.city.CityInfoDTO;
+import com.vova.laba.DTO.city.CityDispalyWithWeather;
+import com.vova.laba.DTO.city.CityDisplayDTO;
+import com.vova.laba.DTO.city.CityInfoDTO;
 
 public interface CityService {
 

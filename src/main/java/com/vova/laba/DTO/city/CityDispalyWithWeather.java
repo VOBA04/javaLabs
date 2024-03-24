@@ -1,4 +1,4 @@
-package com.vova.laba.payload.city;
+package com.vova.laba.DTO.city;
 
 import java.util.List;
 

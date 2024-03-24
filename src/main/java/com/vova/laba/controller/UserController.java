@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vova.laba.payload.user.UserDisplayDTO;
-import com.vova.laba.payload.user.UserInfoDTO;
+import com.vova.laba.DTO.user.UserDisplayDTO;
+import com.vova.laba.DTO.user.UserInfoDTO;
 import com.vova.laba.service.UserService;
 
 @RestController

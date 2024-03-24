@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vova.laba.payload.weather.WeatherCreateDTO;
-import com.vova.laba.payload.weather.WeatherDisplayDTO;
-import com.vova.laba.payload.weather.WeatherInfoDTO;
+import com.vova.laba.DTO.weather.WeatherCreateDTO;
+import com.vova.laba.DTO.weather.WeatherDisplayDTO;
+import com.vova.laba.DTO.weather.WeatherInfoDTO;
 import com.vova.laba.service.WeatherService;
 
 @RestController

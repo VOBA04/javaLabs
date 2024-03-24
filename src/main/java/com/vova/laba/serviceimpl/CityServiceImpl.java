@@ -7,10 +7,10 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.vova.laba.DTO.city.CityDispalyWithWeather;
+import com.vova.laba.DTO.city.CityDisplayDTO;
+import com.vova.laba.DTO.city.CityInfoDTO;
 import com.vova.laba.model.City;
-import com.vova.laba.payload.city.CityDispalyWithWeather;
-import com.vova.laba.payload.city.CityDisplayDTO;
-import com.vova.laba.payload.city.CityInfoDTO;
 import com.vova.laba.repository.CityRepository;
 import com.vova.laba.service.CityService;
 
