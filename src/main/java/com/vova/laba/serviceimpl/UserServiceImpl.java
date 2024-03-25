@@ -3,6 +3,7 @@ package com.vova.laba.serviceimpl;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
     public boolean deleteUser(Long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user != null) {
-            user.getCities().forEach(city -> city.deleteUser(id));
+            Set.copyOf(user.getCities()).forEach(city -> city.deleteUser(id));
             userRepository.deleteById(id);
             cache.remove(id);
             return true;

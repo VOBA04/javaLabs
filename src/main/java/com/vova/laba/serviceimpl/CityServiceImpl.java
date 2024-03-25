@@ -3,6 +3,7 @@ package com.vova.laba.serviceimpl;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,7 @@ public class CityServiceImpl implements CityService {
     public boolean deleteCity(Long id) {
         City city = cityRepository.findById(id).orElse(null);
         if (city != null) {
-            city.getUsers().forEach(user -> user.deleteCity(id));
+            Set.copyOf(city.getUsers()).forEach(user -> user.deleteCity(id));
             cityRepository.deleteById(id);
             cache.remove(id);
             return true;
