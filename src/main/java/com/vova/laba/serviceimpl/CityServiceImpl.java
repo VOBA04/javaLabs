@@ -98,7 +98,7 @@ public class CityServiceImpl implements CityService {
     @Override
     public Optional<CityDispalyWithWeather> getCityWeatherByTemperature(Long cityId, Float minTemp, Float maxTemp) {
         CityDispalyWithWeather city = modelMapper.map(
-                cityRepository.findCityWeatherByTemperature(cityId, minTemp, maxTemp).orElse(null),
+                cityRepository.findById(cityId).orElse(null),
                 CityDispalyWithWeather.class);
         Optional<List<Weather>> weather = weatherRepository.findWeatherByCityIdAndTemperature(cityId, minTemp, maxTemp);
         if (city == null || !weather.isPresent()) {

@@ -13,7 +13,7 @@ import com.vova.laba.model.Weather;
 @Repository
 public interface WeatherRepository extends JpaRepository<Weather, Long> {
 
-    @Query("SELECT w FROM Weather w JOIN w.city c WHERE c.id = :city AND w.temp >= :minTemp AND w.temp <= :maxTemp")
+    @Query("SELECT w FROM Weather w WHERE w.city.id = :city AND w.temp >= :minTemp AND w.temp <= :maxTemp")
     Optional<List<Weather>> findWeatherByCityIdAndTemperature(@Param("city") Long cityId,
             @Param("minTemp") Float minTemp,
             @Param("maxTemp") Float maxTemp);
