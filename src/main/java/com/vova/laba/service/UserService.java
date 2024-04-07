@@ -1,24 +1,26 @@
 package com.vova.laba.service;
 
+import com.vova.laba.dto.user.UserDisplayDto;
+import com.vova.laba.dto.user.UserInfoDto;
+import com.vova.laba.exceptions.BadRequestException;
+import com.vova.laba.exceptions.NotFoundExcepcion;
 import java.util.List;
 import java.util.Optional;
 
-import com.vova.laba.dto.user.UserDisplayDTO;
-import com.vova.laba.dto.user.UserInfoDTO;
-
 public interface UserService {
 
-    public Optional<List<UserDisplayDTO>> getAllUsers();
+  public Optional<List<UserDisplayDto>> getAllUsers();
 
-    public Optional<UserDisplayDTO> getUserById(Long id);
+  public Optional<UserDisplayDto> getUserById(Long id) throws NotFoundExcepcion;
 
-    public UserDisplayDTO saveUser(UserInfoDTO user);
+  public Optional<UserDisplayDto> saveUser(UserInfoDto user) throws BadRequestException;
 
-    public UserDisplayDTO updateUser(Long id, UserInfoDTO user);
+  public Optional<UserDisplayDto> updateUser(Long id, UserInfoDto user) throws BadRequestException;
 
-    public boolean deleteUser(Long id);
+  public Optional<UserDisplayDto> deleteUser(Long id) throws NotFoundExcepcion;
 
-    public Optional<UserDisplayDTO> addCityToUser(Long userId, Long cityId);
+  public Optional<UserDisplayDto> addCityToUser(Long userId, Long cityId) throws NotFoundExcepcion;
 
-    public Optional<UserDisplayDTO> removeCityFromUser(Long userId, Long cityId);
+  public Optional<UserDisplayDto> removeCityFromUser(Long userId, Long cityId)
+      throws NotFoundExcepcion;
 }

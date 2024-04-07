@@ -1,7 +1,9 @@
 package com.vova.laba.controller;
 
+import com.vova.laba.dto.user.UserDisplayDto;
+import com.vova.laba.dto.user.UserInfoDto;
+import com.vova.laba.service.UserService;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,58 +16,52 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vova.laba.dto.user.UserDisplayDTO;
-import com.vova.laba.dto.user.UserInfoDTO;
-import com.vova.laba.service.UserService;
-
 @RestController
 @RequestMapping("api/v2/user")
 public class UserController {
 
-    private UserService userService;
+  private UserService userService;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+  @Autowired
+  public UserController(UserService userService) {
+    this.userService = userService;
+  }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<UserDisplayDTO>> getAllUsers() {
-        return ResponseEntity.of(userService.getAllUsers());
-    }
+  @GetMapping("/all")
+  public ResponseEntity<List<UserDisplayDto>> getAllUsers() {
+    return ResponseEntity.of(userService.getAllUsers());
+  }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDisplayDTO> getUserById(@PathVariable("id") Long id) {
-        return ResponseEntity.of(userService.getUserById(id));
-    }
+  @GetMapping("/{id}")
+  public ResponseEntity<UserDisplayDto> getUserById(@PathVariable("id") Long id) {
+    return ResponseEntity.of(userService.getUserById(id));
+  }
 
-    @PostMapping("/")
-    public ResponseEntity<UserDisplayDTO> createUser(@RequestBody UserInfoDTO user) {
-        return ResponseEntity.ok(userService.saveUser(user));
-    }
+  @PostMapping("/")
+  public ResponseEntity<UserDisplayDto> createUser(@RequestBody UserInfoDto user) {
+    return ResponseEntity.of(userService.saveUser(user));
+  }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserDisplayDTO> updateUser(@PathVariable("id") Long id, @RequestBody UserInfoDTO user) {
-        return ResponseEntity.ok(userService.updateUser(id, user));
-    }
+  @PutMapping("/{id}")
+  public ResponseEntity<UserDisplayDto> updateUser(
+      @PathVariable("id") Long id, @RequestBody UserInfoDto user) {
+    return ResponseEntity.of(userService.updateUser(id, user));
+  }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
-        if (userService.deleteUser(id)) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
-    }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<UserDisplayDto> deleteUser(@PathVariable("id") Long id) {
+    return ResponseEntity.of(userService.deleteUser(id));
+  }
 
-    @PostMapping("/add_city")
-    public ResponseEntity<UserDisplayDTO> addCityToUser(@RequestParam(value = "user_id") Long userId,
-            @RequestParam(value = "city_id") Long cityId) {
-        return ResponseEntity.of(userService.addCityToUser(userId, cityId));
-    }
+  @PostMapping("/add_city")
+  public ResponseEntity<UserDisplayDto> addCityToUser(
+      @RequestParam(value = "user_id") Long userId, @RequestParam(value = "city_id") Long cityId) {
+    return ResponseEntity.of(userService.addCityToUser(userId, cityId));
+  }
 
-    @DeleteMapping("/remove_city")
-    public ResponseEntity<UserDisplayDTO> removeCityFromUser(@RequestParam(value = "user_id") Long userId,
-            @RequestParam(value = "city_id") Long cityId) {
-        return ResponseEntity.of(userService.removeCityFromUser(userId, cityId));
-    }
+  @DeleteMapping("/remove_city")
+  public ResponseEntity<UserDisplayDto> removeCityFromUser(
+      @RequestParam(value = "user_id") Long userId, @RequestParam(value = "city_id") Long cityId) {
+    return ResponseEntity.of(userService.removeCityFromUser(userId, cityId));
+  }
 }

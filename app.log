@@ -1,0 +1,4 @@
+21:50:20.156 INFO  com.vova.laba.aspect.LoggingAspect - Aspect is initialized
+21:50:26.725 INFO  com.vova.laba.aspect.LoggingAspect - Called method getCityById() with args: [30]
+21:50:26.825 ERROR com.vova.laba.aspect.LoggingAspect - In the method getCityById() throwed exception with message: There is no city with id=30
+21:50:41.078 INFO  com.vova.laba.aspect.LoggingAspect - Aspect is destroyed

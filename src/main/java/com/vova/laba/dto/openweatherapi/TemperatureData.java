@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class TemperatureData {
-    private Float temp;
-    private Integer pressure;
-    private Integer humidity;
+  private Float temp;
+  private Integer pressure;
+  private Integer humidity;
 }

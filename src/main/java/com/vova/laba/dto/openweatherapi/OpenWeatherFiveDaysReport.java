@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class OpenWeatherFiveDaysReport {
-    OpenWeatherReport[] list;
+  OpenWeatherReport[] list;
 }

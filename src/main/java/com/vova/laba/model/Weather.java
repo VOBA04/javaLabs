@@ -1,7 +1,6 @@
 package com.vova.laba.model;
 
 import com.vova.laba.dto.openweatherapi.WeatherDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,48 +20,48 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Weather {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "temp")
-    Float temp;
+  @Column(name = "temp")
+  Float temp;
 
-    @Column(name = "pressure")
-    Integer pressure;
+  @Column(name = "pressure")
+  Integer pressure;
 
-    @Column(name = "humidity")
-    Integer humidity;
+  @Column(name = "humidity")
+  Integer humidity;
 
-    @Column(name = "speed")
-    Float speed;
+  @Column(name = "speed")
+  Float speed;
 
-    @Column(name = "deg")
-    Integer deg;
+  @Column(name = "deg")
+  Integer deg;
 
-    @Column(name = "clouds")
-    Integer clouds;
+  @Column(name = "clouds")
+  Integer clouds;
 
-    @Column(name = "day")
-    Integer day;
+  @Column(name = "day")
+  Integer day;
 
-    @Column(name = "month")
-    Integer month;
+  @Column(name = "month")
+  Integer month;
 
-    @Column(name = "year")
-    Integer year;
+  @Column(name = "year")
+  Integer year;
 
-    @ManyToOne
-    @JoinColumn(name = "city_id")
-    private City city = new City();
+  @ManyToOne
+  @JoinColumn(name = "city_id")
+  private City city = new City();
 
-    public void setDate(WeatherDate date) {
-        day = date.getDay();
-        month = date.getMonth();
-        year = date.getYear();
-    }
+  public void setDate(WeatherDate date) {
+    day = date.getDay();
+    month = date.getMonth();
+    year = date.getYear();
+  }
 
-    public void setCityId(Long id) {
-        city.setId(id);
-    }
+  public void setCityId(Long id) {
+    city.setId(id);
+  }
 }

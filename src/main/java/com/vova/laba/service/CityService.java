@@ -1,25 +1,27 @@
 package com.vova.laba.service;
 
+import com.vova.laba.dto.city.CityDispalyWithWeather;
+import com.vova.laba.dto.city.CityDisplayDto;
+import com.vova.laba.dto.city.CityInfoDto;
+import com.vova.laba.exceptions.BadRequestException;
+import com.vova.laba.exceptions.NotFoundExcepcion;
 import java.util.List;
 import java.util.Optional;
 
-import com.vova.laba.dto.city.CityDispalyWithWeather;
-import com.vova.laba.dto.city.CityDisplayDTO;
-import com.vova.laba.dto.city.CityInfoDTO;
-
 public interface CityService {
 
-    public Optional<List<CityDisplayDTO>> getAllCities();
+  public Optional<List<CityDisplayDto>> getAllCities();
 
-    public Optional<CityDisplayDTO> getCityById(Long id);
+  public Optional<CityDisplayDto> getCityById(Long id) throws NotFoundExcepcion;
 
-    public CityDisplayDTO saveCity(CityInfoDTO city);
+  public Optional<CityDisplayDto> saveCity(CityInfoDto city) throws BadRequestException;
 
-    public CityDisplayDTO updateCity(Long id, CityInfoDTO city);
+  public Optional<CityDisplayDto> updateCity(Long id, CityInfoDto city) throws BadRequestException;
 
-    public boolean deleteCity(Long id);
+  public Optional<CityDispalyWithWeather> deleteCity(Long id) throws NotFoundExcepcion;
 
-    public Optional<CityDispalyWithWeather> getAllCityWeather(Long cityId);
+  public Optional<CityDispalyWithWeather> getAllCityWeather(Long cityId) throws NotFoundExcepcion;
 
-    public Optional<CityDispalyWithWeather> getCityWeatherByTemperature(Long cityId, Float minTemp, Float maxTemp);
+  public Optional<CityDispalyWithWeather> getCityWeatherByTemperature(
+      Long cityId, Float minTemp, Float maxTemp) throws NotFoundExcepcion;
 }

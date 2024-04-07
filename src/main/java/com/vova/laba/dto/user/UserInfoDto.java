@@ -1,4 +1,4 @@
-package com.vova.laba.dto.city;
+package com.vova.laba.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CityInfoDTO {
-
-    private String cityName;
+public class UserInfoDto {
+  private String name;
 }

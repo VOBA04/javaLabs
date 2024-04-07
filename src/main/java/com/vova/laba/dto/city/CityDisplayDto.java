@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class CityDisplayDTO extends CityInfoDTO {
+public class CityDisplayDto extends CityInfoDto {
 
-    private Long id;
+  private Long id;
 }

@@ -1,21 +1,26 @@
 package com.vova.laba.service;
 
+import com.vova.laba.dto.city.CityInfoDto;
+import com.vova.laba.dto.openweatherapi.CityCoordinatesResponse;
+import com.vova.laba.dto.weather.WeatherInfoDto;
+import com.vova.laba.exceptions.ApiException;
+import com.vova.laba.exceptions.BadRequestException;
 import java.util.List;
 import java.util.Optional;
 
-import com.vova.laba.dto.city.CityInfoDTO;
-import com.vova.laba.dto.openweatherapi.CityCoordinatesResponse;
-import com.vova.laba.dto.weather.WeatherInfoDTO;
-
 public interface WeatherApiService {
 
-    public Optional<WeatherInfoDTO> getWeather(CityCoordinatesResponse coord);
+  public Optional<CityCoordinatesResponse> getCoordinates(String city);
 
-    public Optional<List<WeatherInfoDTO>> getFiveDaysWeather(CityCoordinatesResponse coord);
+  public Optional<WeatherInfoDto> getWeather(Optional<CityCoordinatesResponse> coordOptional)
+      throws BadRequestException, ApiException;
 
-    public CityCoordinatesResponse getCoordinates(String city);
+  public Optional<List<WeatherInfoDto>> getFiveDaysWeather(
+      Optional<CityCoordinatesResponse> coordOptional) throws BadRequestException, ApiException;
 
-    public void addToDatabase(CityInfoDTO city, WeatherInfoDTO weather);
+  public void addToDatabase(CityInfoDto city, WeatherInfoDto weather)
+      throws BadRequestException, ApiException;
 
-    public void addToDatabase(CityInfoDTO city, List<WeatherInfoDTO> weathers);
+  public void addToDatabase(CityInfoDto city, List<WeatherInfoDto> weathers)
+      throws BadRequestException, ApiException;
 }

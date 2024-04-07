@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class WeatherCreateDTO extends WeatherInfoDTO {
-
-    private Long cityId;
+public class WeatherCreateDto extends WeatherInfoDto {
+  private Long cityId;
 }

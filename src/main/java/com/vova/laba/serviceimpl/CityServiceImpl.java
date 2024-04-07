@@ -1,111 +1,147 @@
 package com.vova.laba.serviceimpl;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.vova.laba.aspect.Logging;
 import com.vova.laba.dto.city.CityDispalyWithWeather;
-import com.vova.laba.dto.city.CityDisplayDTO;
-import com.vova.laba.dto.city.CityInfoDTO;
-import com.vova.laba.dto.city.CityWeatherInfoDTO;
+import com.vova.laba.dto.city.CityDisplayDto;
+import com.vova.laba.dto.city.CityInfoDto;
+import com.vova.laba.dto.city.CityWeatherInfoDto;
+import com.vova.laba.exceptions.BadRequestException;
+import com.vova.laba.exceptions.NotFoundExcepcion;
 import com.vova.laba.model.City;
 import com.vova.laba.model.Weather;
 import com.vova.laba.repository.CityRepository;
 import com.vova.laba.repository.WeatherRepository;
 import com.vova.laba.service.CityService;
 import com.vova.laba.utils.cache.GenericCache;
-
 import jakarta.transaction.Transactional;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
 public class CityServiceImpl implements CityService {
 
-    private final CityRepository cityRepository;
-    private final WeatherRepository weatherRepository;
+  private final CityRepository cityRepository;
+  private final WeatherRepository weatherRepository;
 
-    private ModelMapper modelMapper;
+  private ModelMapper modelMapper;
 
-    private GenericCache<Long, City> cache;
+  private GenericCache<Long, City> cache;
 
-    @Autowired
-    public CityServiceImpl(CityRepository cityRepository, WeatherRepository weatherRepository, ModelMapper modelMapper,
-            GenericCache<Long, City> cache) {
-        this.cityRepository = cityRepository;
-        this.weatherRepository = weatherRepository;
-        this.modelMapper = modelMapper;
-        this.cache = cache;
+  private String cityErrorMessage = "There is no city with id=";
+
+  @Autowired
+  public CityServiceImpl(
+      CityRepository cityRepository,
+      WeatherRepository weatherRepository,
+      ModelMapper modelMapper,
+      GenericCache<Long, City> cache) {
+    this.cityRepository = cityRepository;
+    this.weatherRepository = weatherRepository;
+    this.modelMapper = modelMapper;
+    this.cache = cache;
+  }
+
+  @Logging
+  @Override
+  public Optional<List<CityDisplayDto>> getAllCities() {
+    List<City> cities = cityRepository.findAll();
+    return Optional.of(Arrays.asList(modelMapper.map(cities, CityDisplayDto[].class)));
+  }
+
+  @Logging
+  @Override
+  public Optional<CityDisplayDto> getCityById(Long id) throws NotFoundExcepcion {
+    City city = cache.get(id).orElseGet(() -> cityRepository.findById(id).orElse(null));
+    if (city == null) {
+      throw new NotFoundExcepcion(cityErrorMessage, id);
     }
+    cache.put(id, city);
+    return Optional.of(modelMapper.map(city, CityDisplayDto.class));
+  }
 
-    @Override
-    public Optional<List<CityDisplayDTO>> getAllCities() {
-        List<City> cities = cityRepository.findAll();
-        if (cities.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(Arrays.asList(modelMapper.map(cities, CityDisplayDTO[].class)));
+  @Logging
+  @Override
+  public Optional<CityDisplayDto> saveCity(CityInfoDto city) throws BadRequestException {
+    if (city.getCityName() == null || city.getCityName().equals("")) {
+      throw new BadRequestException("Wrong city name");
     }
+    Optional<City> cityModel = cityRepository.findCityByCityName(city.getCityName());
+    if (cityModel.isPresent()) {
+      return Optional.of(modelMapper.map(cityModel.get(), CityDisplayDto.class));
+    }
+    try {
+      return Optional.of(
+          modelMapper.map(
+              cityRepository.save(modelMapper.map(city, City.class)), CityDisplayDto.class));
+    } catch (Exception e) {
+      throw new BadRequestException("Wrong city parameters");
+    }
+  }
 
-    @Override
-    public Optional<CityDisplayDTO> getCityById(Long id) {
-        City city = cache.get(id).orElseGet(() -> cityRepository.findById(id).orElse(null));
-        if (city == null) {
-            return Optional.empty();
-        }
-        cache.put(id, city);
-        return Optional.of(modelMapper.map(city, CityDisplayDTO.class));
+  @Logging
+  @Override
+  public Optional<CityDisplayDto> updateCity(Long id, CityInfoDto city) throws BadRequestException {
+    if (city.getCityName() == null || city.getCityName().equals("")) {
+      throw new BadRequestException("Wrong city name");
     }
+    City cityModel = modelMapper.map(city, City.class);
+    cityModel.setId(id);
+    Optional<City> cityCache = cache.get(id);
+    cache.remove(id);
+    try {
+      return Optional.of(modelMapper.map(cityRepository.save(cityModel), CityDisplayDto.class));
+    } catch (Exception e) {
+      if (cityCache.isPresent()) {
+        cache.put(id, cityCache.get());
+      }
+      throw new BadRequestException("Wrong city parameters");
+    }
+  }
 
-    @Override
-    public CityDisplayDTO saveCity(CityInfoDTO city) {
-        Optional<City> cityModel = cityRepository.findCityByCityName(city.getCityName());
-        if (cityModel.isPresent()) {
-            return modelMapper.map(cityModel.get(), CityDisplayDTO.class);
-        }
-        return modelMapper.map(cityRepository.save(modelMapper.map(city, City.class)), CityDisplayDTO.class);
+  @Logging
+  @Override
+  public Optional<CityDispalyWithWeather> deleteCity(Long id) throws NotFoundExcepcion {
+    City city = cityRepository.findById(id).orElse(null);
+    if (city != null) {
+      Set.copyOf(city.getUsers()).forEach(user -> user.deleteCity(id));
+      cityRepository.deleteById(id);
+      cache.remove(id);
+      return Optional.of(modelMapper.map(city, CityDispalyWithWeather.class));
     }
+    throw new NotFoundExcepcion(cityErrorMessage, id);
+  }
 
-    @Override
-    public CityDisplayDTO updateCity(Long id, CityInfoDTO city) {
-        City cityModel = modelMapper.map(city, City.class);
-        cityModel.setId(id);
-        cache.remove(id);
-        return modelMapper.map(cityRepository.save(cityModel), CityDisplayDTO.class);
+  @Logging
+  @Override
+  public Optional<CityDispalyWithWeather> getAllCityWeather(Long cityId) throws NotFoundExcepcion {
+    City city = cityRepository.findById(cityId).orElse(null);
+    if (city == null) {
+      throw new NotFoundExcepcion(cityErrorMessage, cityId);
     }
+    return Optional.of(modelMapper.map(city, CityDispalyWithWeather.class));
+  }
 
-    @Override
-    public boolean deleteCity(Long id) {
-        City city = cityRepository.findById(id).orElse(null);
-        if (city != null) {
-            Set.copyOf(city.getUsers()).forEach(user -> user.deleteCity(id));
-            cityRepository.deleteById(id);
-            cache.remove(id);
-            return true;
-        }
-        return false;
+  @Logging
+  @Override
+  public Optional<CityDispalyWithWeather> getCityWeatherByTemperature(
+      Long cityId, Float minTemp, Float maxTemp) throws NotFoundExcepcion {
+    CityDispalyWithWeather city =
+        modelMapper.map(cityRepository.findById(cityId).orElse(null), CityDispalyWithWeather.class);
+    Optional<List<Weather>> weather =
+        weatherRepository.findWeatherByCityIdAndTemperature(cityId, minTemp, maxTemp);
+    if (city == null) {
+      throw new NotFoundExcepcion(cityErrorMessage, cityId);
     }
-
-    @Override
-    public Optional<CityDispalyWithWeather> getAllCityWeather(Long cityId) {
-        return Optional.ofNullable(
-                modelMapper.map(cityRepository.findById(cityId).orElse(null), CityDispalyWithWeather.class));
+    if (!weather.isPresent()) {
+      throw new NotFoundExcepcion("There is no weather with a set temperature");
     }
-
-    @Override
-    public Optional<CityDispalyWithWeather> getCityWeatherByTemperature(Long cityId, Float minTemp, Float maxTemp) {
-        CityDispalyWithWeather city = modelMapper.map(
-                cityRepository.findById(cityId).orElse(null),
-                CityDispalyWithWeather.class);
-        Optional<List<Weather>> weather = weatherRepository.findWeatherByCityIdAndTemperature(cityId, minTemp, maxTemp);
-        if (city == null || !weather.isPresent()) {
-            return Optional.empty();
-        }
-        city.setWeather(Arrays.asList(modelMapper.map(weather.get(), CityWeatherInfoDTO[].class)));
-        return Optional.of(city);
-    }
+    city.setWeather(Arrays.asList(modelMapper.map(weather.get(), CityWeatherInfoDto[].class)));
+    return Optional.of(city);
+  }
 }

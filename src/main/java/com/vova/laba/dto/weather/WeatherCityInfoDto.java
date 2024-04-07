@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class WeatherCityInfoDTO {
-    private Long id;
-    private String cityName;
+public class WeatherCityInfoDto {
+  private Long id;
+  private String cityName;
 }

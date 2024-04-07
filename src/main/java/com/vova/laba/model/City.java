@@ -1,9 +1,5 @@
 package com.vova.laba.model;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +11,9 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,31 +25,36 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class City {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "cityName", unique = true)
-    private String cityName;
+  @Column(name = "cityName", unique = true)
+  private String cityName;
 
-    @OneToMany(mappedBy = "city", cascade = { CascadeType.REMOVE, CascadeType.MERGE })
-    private List<Weather> weather;
+  @OneToMany(
+      mappedBy = "city",
+      cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+  private List<Weather> weather;
 
-    @ManyToMany
-    @EqualsAndHashCode.Exclude
-    @JoinTable(name = "city_user", joinColumns = @JoinColumn(name = "city_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> users = new HashSet<>();
+  @ManyToMany
+  @EqualsAndHashCode.Exclude
+  @JoinTable(
+      name = "city_user",
+      joinColumns = @JoinColumn(name = "city_id"),
+      inverseJoinColumns = @JoinColumn(name = "user_id"))
+  private Set<User> users = new HashSet<>();
 
-    public void addUser(User user) {
-        users.add(user);
-        user.getCities().add(this);
+  public void addUser(User user) {
+    users.add(user);
+    user.getCities().add(this);
+  }
+
+  public void deleteUser(Long userId) {
+    User user = users.stream().filter(t -> t.getId().equals(userId)).findFirst().orElse(null);
+    if (user != null) {
+      users.remove(user);
+      user.getCities().remove(this);
     }
-
-    public void deleteUser(Long userId) {
-        User user = users.stream().filter(t -> t.getId().equals(userId)).findFirst().orElse(null);
-        if (user != null) {
-            users.remove(user);
-            user.getCities().remove(this);
-        }
-    }
+  }
 }

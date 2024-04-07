@@ -1,20 +1,23 @@
 package com.vova.laba.service;
 
+import com.vova.laba.dto.weather.WeatherCreateDto;
+import com.vova.laba.dto.weather.WeatherDisplayDto;
+import com.vova.laba.exceptions.BadRequestException;
+import com.vova.laba.exceptions.NotFoundExcepcion;
 import java.util.List;
 import java.util.Optional;
 
-import com.vova.laba.dto.weather.WeatherCreateDTO;
-import com.vova.laba.dto.weather.WeatherDisplayDTO;
-
 public interface WeatherService {
 
-    public Optional<List<WeatherDisplayDTO>> getAllWeather();
+  public Optional<List<WeatherDisplayDto>> getAllWeather();
 
-    public Optional<WeatherDisplayDTO> getWeatherById(Long id);
+  public Optional<WeatherDisplayDto> getWeatherById(Long id) throws NotFoundExcepcion;
 
-    public WeatherDisplayDTO saveWeather(WeatherCreateDTO weather);
+  public Optional<WeatherDisplayDto> saveWeather(WeatherCreateDto weather)
+      throws BadRequestException;
 
-    public WeatherDisplayDTO updateWeather(Long id, WeatherCreateDTO weather);
+  public Optional<WeatherDisplayDto> updateWeather(Long id, WeatherCreateDto weather)
+      throws BadRequestException;
 
-    public boolean deleteWeather(Long id);
+  public Optional<WeatherDisplayDto> deleteWeather(Long id) throws NotFoundExcepcion;
 }
