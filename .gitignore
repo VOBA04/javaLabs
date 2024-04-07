@@ -6,6 +6,7 @@ mvnw.cmd
 key.txt
 !**/src/main/**/target/
 !**/src/test/**/target/
+app.log
 
 ### STS ###
 .apt_generated

@@ -12,7 +12,8 @@ spring:
     username: ${SPRING_DB_USER:postgres}
     password: ${SPRING_DB_PASSWORD:123@}
     driver-class-name: org.postgresql.Driver
-  springdoc:
-    swagger-ui:
-      disable-swagger-default-url: true
-      path: /
+
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+    path: /
