@@ -1,5 +1,6 @@
 package com.vova.laba.serviceimpl;
 
+import com.vova.laba.aspect.Logging;
 import com.vova.laba.dto.weather.WeatherCreateDto;
 import com.vova.laba.dto.weather.WeatherDisplayDto;
 import com.vova.laba.exceptions.BadRequestException;
@@ -54,6 +55,7 @@ public class WeatherServiceImpl implements WeatherService {
     return Optional.of(modelMapper.map(weather, WeatherDisplayDto.class));
   }
 
+  @Logging
   @Override
   public Optional<WeatherDisplayDto> saveWeather(WeatherCreateDto weather)
       throws BadRequestException {

@@ -52,7 +52,7 @@ public class Weather {
   Integer year;
 
   @ManyToOne
-  @JoinColumn(name = "city_id")
+  @JoinColumn(name = "city_id", nullable = false)
   private City city = new City();
 
   public void setDate(WeatherDate date) {

@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
       throw new NotFoundExcepcion(userErrorMessage, userId);
     }
     if (city == null) {
-      throw new NotFoundExcepcion("There is no user with id ", cityId);
+      throw new NotFoundExcepcion("There is no city with id ", cityId);
     }
     user.addCity(city);
     cache.put(userId, user);
