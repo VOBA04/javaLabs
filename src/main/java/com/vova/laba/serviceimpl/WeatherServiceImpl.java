@@ -6,6 +6,7 @@ import com.vova.laba.dto.weather.WeatherDisplayDto;
 import com.vova.laba.exceptions.BadRequestException;
 import com.vova.laba.exceptions.NotFoundExcepcion;
 import com.vova.laba.model.Weather;
+import com.vova.laba.repository.CityRepository;
 import com.vova.laba.repository.WeatherRepository;
 import com.vova.laba.service.WeatherService;
 import com.vova.laba.utils.cache.GenericCache;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 public class WeatherServiceImpl implements WeatherService {
 
   private final WeatherRepository weatherRepository;
+  private final CityRepository cityRepository;
 
   private ModelMapper modelMapper;
 
@@ -33,10 +35,12 @@ public class WeatherServiceImpl implements WeatherService {
   public WeatherServiceImpl(
       WeatherRepository weatherRepository,
       ModelMapper modelMapper,
-      GenericCache<Long, Weather> cache) {
+      GenericCache<Long, Weather> cache,
+      CityRepository cityRepository) {
     this.weatherRepository = weatherRepository;
     this.modelMapper = modelMapper;
     this.cache = cache;
+    this.cityRepository = cityRepository;
   }
 
   @Override
@@ -59,32 +63,26 @@ public class WeatherServiceImpl implements WeatherService {
   @Override
   public Optional<WeatherDisplayDto> saveWeather(WeatherCreateDto weather)
       throws BadRequestException {
-    try {
-      return Optional.of(
-          modelMapper.map(
-              weatherRepository.save(modelMapper.map(weather, Weather.class)),
-              WeatherDisplayDto.class));
-    } catch (Exception e) {
+    if (!cityRepository.findById(weather.getCityId()).isPresent()) {
       throw new BadRequestException("Wrong weather parameters");
     }
+    return Optional.of(
+        modelMapper.map(
+            weatherRepository.save(modelMapper.map(weather, Weather.class)),
+            WeatherDisplayDto.class));
   }
 
   @Override
   public Optional<WeatherDisplayDto> updateWeather(Long id, WeatherCreateDto weather)
       throws BadRequestException {
-    Weather weatherModel = modelMapper.map(weather, Weather.class);
-    weatherModel.setId(id);
-    Optional<Weather> weatherCache = cache.get(id);
-    cache.remove(id);
-    try {
-      return Optional.of(
-          modelMapper.map(weatherRepository.save(weatherModel), WeatherDisplayDto.class));
-    } catch (Exception e) {
-      if (weatherCache.isPresent()) {
-        cache.put(id, weatherCache.get());
-      }
+    if (!cityRepository.findById(weather.getCityId()).isPresent()) {
       throw new BadRequestException("Wrong weather parameters");
     }
+    Weather weatherModel = modelMapper.map(weather, Weather.class);
+    weatherModel.setId(id);
+    cache.remove(id);
+    return Optional.of(
+        modelMapper.map(weatherRepository.save(weatherModel), WeatherDisplayDto.class));
   }
 
   @Override

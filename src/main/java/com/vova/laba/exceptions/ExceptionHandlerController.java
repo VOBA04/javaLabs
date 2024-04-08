@@ -33,4 +33,12 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
         new ExceptionDetails(new Date(), exception.getMessage(), request.getDescription(false));
     return new ResponseEntity<>(details, HttpStatus.SERVICE_UNAVAILABLE);
   }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ExceptionDetails> internalServiceException(
+      Exception exception, WebRequest request) {
+    ExceptionDetails details =
+        new ExceptionDetails(new Date(), exception.getMessage(), request.getDescription(false));
+    return new ResponseEntity<>(details, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 }
