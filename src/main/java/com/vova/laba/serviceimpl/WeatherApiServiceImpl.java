@@ -1,5 +1,6 @@
 package com.vova.laba.serviceimpl;
 
+import com.vova.laba.aspect.Logging;
 import com.vova.laba.dto.city.CityDisplayDto;
 import com.vova.laba.dto.city.CityInfoDto;
 import com.vova.laba.dto.openweatherapi.CityCoordinatesResponse;
@@ -45,6 +46,7 @@ public class WeatherApiServiceImpl implements WeatherApiService {
     this.modelMapper = modelMapper;
   }
 
+  @Logging
   @Override
   public Optional<CityCoordinatesResponse> getCoordinates(String city) {
     String apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q={city}&limit=1&appid={key}";
@@ -62,6 +64,7 @@ public class WeatherApiServiceImpl implements WeatherApiService {
     }
   }
 
+  @Logging
   @Override
   public Optional<WeatherInfoDto> getWeather(Optional<CityCoordinatesResponse> coordOptional)
       throws BadRequestException, ApiException {
@@ -95,6 +98,7 @@ public class WeatherApiServiceImpl implements WeatherApiService {
     throw new ApiException("Error receiving data from OpenWeatherAPI");
   }
 
+  @Logging
   @Override
   public Optional<List<WeatherInfoDto>> getFiveDaysWeather(
       Optional<CityCoordinatesResponse> coordOptional) throws BadRequestException, ApiException {
@@ -136,6 +140,7 @@ public class WeatherApiServiceImpl implements WeatherApiService {
     throw new ApiException("Error receiving data from OpenWeatherAPI");
   }
 
+  @Logging
   @Override
   @Transactional
   public void addToDatabase(CityInfoDto city, WeatherInfoDto weather)
@@ -149,6 +154,7 @@ public class WeatherApiServiceImpl implements WeatherApiService {
     }
   }
 
+  @Logging
   @Override
   @Transactional
   public void addToDatabase(CityInfoDto city, List<WeatherInfoDto> weathers)
