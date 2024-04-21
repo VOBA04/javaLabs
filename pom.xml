@@ -15,8 +15,25 @@
 	<description>java laba</description>
 	<properties>
 		<java.version>21</java.version>
+  		<sonar.organization>voba04</sonar.organization>
+  		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	<dependencies>
+
+		<dependency>
+			<groupId>org.sonarsource.scanner.maven</groupId>
+			<artifactId>sonar-maven-plugin</artifactId>
+			<version>3.11.0.3922</version>
+			<type>maven-plugin</type>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.jacoco</groupId>
+			<artifactId>org.jacoco.agent</artifactId>
+			<version>0.8.12</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springdoc</groupId>
@@ -74,7 +91,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-
 		</dependency>
 		
 		<dependency>
