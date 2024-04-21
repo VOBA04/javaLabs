@@ -15,6 +15,9 @@ public interface UserService {
 
   public Optional<UserDisplayDto> saveUser(UserInfoDto user) throws BadRequestException;
 
+  public Optional<List<UserDisplayDto>> saveUsers(List<UserInfoDto> users)
+      throws BadRequestException;
+
   public Optional<UserDisplayDto> updateUser(Long id, UserInfoDto user) throws BadRequestException;
 
   public Optional<UserDisplayDto> deleteUser(Long id) throws NotFoundExcepcion;

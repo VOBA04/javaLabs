@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -38,6 +39,8 @@ public class WeatherApiServiceImpl implements WeatherApiService {
   private final WeatherService weatherService;
   private final ModelMapper modelMapper;
 
+  private String cityName = "Wrong city name";
+
   @Autowired
   public WeatherApiServiceImpl(
       CityService cityService, WeatherService weatherService, ModelMapper modelMapper) {
@@ -48,14 +51,19 @@ public class WeatherApiServiceImpl implements WeatherApiService {
 
   @Logging
   @Override
-  public Optional<CityCoordinatesResponse> getCoordinates(String city) {
+  public Optional<CityCoordinatesResponse> getCoordinates(String city) throws BadRequestException {
     String apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q={city}&limit=1&appid={key}";
     RestTemplate restTemplate = new RestTemplate();
     Map<String, String> uriVariables = new HashMap<>();
     uriVariables.put("city", city);
     uriVariables.put("key", key);
-    ResponseEntity<CityCoordinatesResponse[]> responseEntity =
-        restTemplate.getForEntity(apiUrl, CityCoordinatesResponse[].class, uriVariables);
+    ResponseEntity<CityCoordinatesResponse[]> responseEntity;
+    try {
+      responseEntity =
+          restTemplate.getForEntity(apiUrl, CityCoordinatesResponse[].class, uriVariables);
+    } catch (RestClientException e) {
+      throw new BadRequestException(cityName);
+    }
     CityCoordinatesResponse[] responseBody = responseEntity.getBody();
     if (responseBody != null && responseBody.length > 0) {
       return Optional.of(responseBody[0]);
@@ -69,7 +77,7 @@ public class WeatherApiServiceImpl implements WeatherApiService {
   public Optional<WeatherInfoDto> getWeather(Optional<CityCoordinatesResponse> coordOptional)
       throws BadRequestException, ApiException {
     if (!coordOptional.isPresent()) {
-      throw new BadRequestException("Wrong city name");
+      throw new BadRequestException(cityName);
     }
     CityCoordinatesResponse coord = coordOptional.get();
     String apiUrl =
@@ -103,7 +111,7 @@ public class WeatherApiServiceImpl implements WeatherApiService {
   public Optional<List<WeatherInfoDto>> getFiveDaysWeather(
       Optional<CityCoordinatesResponse> coordOptional) throws BadRequestException, ApiException {
     if (!coordOptional.isPresent()) {
-      throw new BadRequestException("Wrong city name");
+      throw new BadRequestException(cityName);
     }
     CityCoordinatesResponse coord = coordOptional.get();
     String apiUrl =

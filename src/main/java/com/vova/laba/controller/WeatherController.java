@@ -41,6 +41,12 @@ public class WeatherController {
     return ResponseEntity.of(weatherService.saveWeather(weather));
   }
 
+  @PostMapping("/forecasts")
+  public ResponseEntity<List<WeatherDisplayDto>> createWeathers(
+      @RequestBody List<WeatherCreateDto> forecasts) {
+    return ResponseEntity.of(weatherService.saveWeathers(forecasts));
+  }
+
   @PutMapping("/{id}")
   public ResponseEntity<WeatherDisplayDto> updateWeather(
       @PathVariable("id") Long id, @RequestBody WeatherCreateDto weather) {

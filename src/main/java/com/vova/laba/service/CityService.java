@@ -16,6 +16,9 @@ public interface CityService {
 
   public Optional<CityDisplayDto> saveCity(CityInfoDto city) throws BadRequestException;
 
+  public Optional<List<CityDisplayDto>> saveCities(List<CityInfoDto> cities)
+      throws BadRequestException;
+
   public Optional<CityDisplayDto> updateCity(Long id, CityInfoDto city) throws BadRequestException;
 
   public Optional<CityDispalyWithWeather> deleteCity(Long id) throws NotFoundExcepcion;

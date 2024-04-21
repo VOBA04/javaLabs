@@ -69,13 +69,23 @@ public class UserServiceImpl implements UserService {
     if (user.getName() == null || user.getName().equals("")) {
       throw new BadRequestException("Wrong user name");
     }
-    try {
-      return Optional.of(
-          modelMapper.map(
-              userRepository.save(modelMapper.map(user, User.class)), UserDisplayDto.class));
-    } catch (Exception e) {
-      throw new BadRequestException("Wrong user parameters");
+    return Optional.of(
+        modelMapper.map(
+            userRepository.save(modelMapper.map(user, User.class)), UserDisplayDto.class));
+  }
+
+  @Logging
+  @Override
+  public Optional<List<UserDisplayDto>> saveUsers(List<UserInfoDto> users)
+      throws BadRequestException {
+    if (users.stream().anyMatch(u -> (u.getName() == null || u.getName().equals("")))) {
+      throw new BadRequestException("Wrong user(s) name(s)");
     }
+    return Optional.of(
+        users.stream()
+            .map(u -> userRepository.save(modelMapper.map(u, User.class)))
+            .map(u -> modelMapper.map(u, UserDisplayDto.class))
+            .toList());
   }
 
   @Logging

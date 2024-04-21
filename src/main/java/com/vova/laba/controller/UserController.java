@@ -42,6 +42,11 @@ public class UserController {
     return ResponseEntity.of(userService.saveUser(user));
   }
 
+  @PostMapping("/users")
+  public ResponseEntity<List<UserDisplayDto>> createUsers(@RequestBody List<UserInfoDto> users) {
+    return ResponseEntity.of(userService.saveUsers(users));
+  }
+
   @PutMapping("/{id}")
   public ResponseEntity<UserDisplayDto> updateUser(
       @PathVariable("id") Long id, @RequestBody UserInfoDto user) {

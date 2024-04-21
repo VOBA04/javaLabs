@@ -43,12 +43,14 @@ public class WeatherServiceImpl implements WeatherService {
     this.cityRepository = cityRepository;
   }
 
+  @Logging
   @Override
   public Optional<List<WeatherDisplayDto>> getAllWeather() {
     List<Weather> weathers = weatherRepository.findAll();
     return Optional.of(Arrays.asList(modelMapper.map(weathers, WeatherDisplayDto[].class)));
   }
 
+  @Logging
   @Override
   public Optional<WeatherDisplayDto> getWeatherById(Long id) throws NotFoundExcepcion {
     Weather weather = cache.get(id).orElseGet(() -> weatherRepository.findById(id).orElse(null));
@@ -72,6 +74,21 @@ public class WeatherServiceImpl implements WeatherService {
             WeatherDisplayDto.class));
   }
 
+  @Logging
+  @Override
+  public Optional<List<WeatherDisplayDto>> saveWeathers(List<WeatherCreateDto> forecasts)
+      throws BadRequestException {
+    if (forecasts.stream().noneMatch(w -> cityRepository.findById(w.getCityId()).isPresent())) {
+      throw new BadRequestException("Wrong weather forecast(s) parameters");
+    }
+    return Optional.of(
+        forecasts.stream()
+            .map(w -> weatherRepository.save(modelMapper.map(w, Weather.class)))
+            .map(w -> modelMapper.map(w, WeatherDisplayDto.class))
+            .toList());
+  }
+
+  @Logging
   @Override
   public Optional<WeatherDisplayDto> updateWeather(Long id, WeatherCreateDto weather)
       throws BadRequestException {
@@ -85,6 +102,7 @@ public class WeatherServiceImpl implements WeatherService {
         modelMapper.map(weatherRepository.save(weatherModel), WeatherDisplayDto.class));
   }
 
+  @Logging
   @Override
   public Optional<WeatherDisplayDto> deleteWeather(Long id) throws NotFoundExcepcion {
     Weather weather = weatherRepository.findById(id).orElse(null);

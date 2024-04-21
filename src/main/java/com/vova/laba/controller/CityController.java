@@ -43,6 +43,11 @@ public class CityController {
     return ResponseEntity.of(cityService.saveCity(city));
   }
 
+  @PostMapping("/cities")
+  public ResponseEntity<List<CityDisplayDto>> createCities(@RequestBody List<CityInfoDto> cities) {
+    return ResponseEntity.of(cityService.saveCities(cities));
+  }
+
   @PutMapping("/{id}")
   public ResponseEntity<CityDisplayDto> updateCity(
       @PathVariable("id") Long id, @RequestBody CityInfoDto city) {

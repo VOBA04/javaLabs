@@ -75,13 +75,23 @@ public class CityServiceImpl implements CityService {
     if (cityModel.isPresent()) {
       return Optional.of(modelMapper.map(cityModel.get(), CityDisplayDto.class));
     }
-    try {
-      return Optional.of(
-          modelMapper.map(
-              cityRepository.save(modelMapper.map(city, City.class)), CityDisplayDto.class));
-    } catch (Exception e) {
-      throw new BadRequestException("Wrong city parameters");
+    return Optional.of(
+        modelMapper.map(
+            cityRepository.save(modelMapper.map(city, City.class)), CityDisplayDto.class));
+  }
+
+  @Logging
+  @Override
+  public Optional<List<CityDisplayDto>> saveCities(List<CityInfoDto> cities)
+      throws BadRequestException {
+    if (cities.stream().anyMatch(c -> (c.getCityName() == null || c.getCityName().equals("")))) {
+      throw new BadRequestException("Wrong city or cities name");
     }
+    return Optional.of(
+        cities.stream()
+            .map(c -> cityRepository.save(modelMapper.map(c, City.class)))
+            .map(c -> modelMapper.map(c, CityDisplayDto.class))
+            .toList());
   }
 
   @Logging

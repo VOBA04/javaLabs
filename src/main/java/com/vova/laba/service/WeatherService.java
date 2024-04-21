@@ -16,6 +16,9 @@ public interface WeatherService {
   public Optional<WeatherDisplayDto> saveWeather(WeatherCreateDto weather)
       throws BadRequestException;
 
+  public Optional<List<WeatherDisplayDto>> saveWeathers(List<WeatherCreateDto> forecasts)
+      throws BadRequestException;
+
   public Optional<WeatherDisplayDto> updateWeather(Long id, WeatherCreateDto weather)
       throws BadRequestException;
 

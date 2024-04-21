@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface WeatherApiService {
 
-  public Optional<CityCoordinatesResponse> getCoordinates(String city);
+  public Optional<CityCoordinatesResponse> getCoordinates(String city) throws BadRequestException;
 
   public Optional<WeatherInfoDto> getWeather(Optional<CityCoordinatesResponse> coordOptional)
       throws BadRequestException, ApiException;
