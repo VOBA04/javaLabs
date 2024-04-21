@@ -62,7 +62,7 @@ public class WeatherApiServiceImpl implements WeatherApiService {
       responseEntity =
           restTemplate.getForEntity(apiUrl, CityCoordinatesResponse[].class, uriVariables);
     } catch (RestClientException e) {
-      throw new BadRequestException(cityName);
+      throw new BadRequestException(e.getMessage());
     }
     CityCoordinatesResponse[] responseBody = responseEntity.getBody();
     if (responseBody != null && responseBody.length > 0) {
