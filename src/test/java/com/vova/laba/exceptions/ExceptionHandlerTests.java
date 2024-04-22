@@ -13,7 +13,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
 @ExtendWith(MockitoExtension.class)
-class ExceptionHabdlerTests {
+class ExceptionHandlerTests {
 
   @InjectMocks private ExceptionHandlerController exceptionHandler;
 
