@@ -142,6 +142,7 @@
           </configuration>
           <executions>
             <execution>
+			<?m2e execute onConfiguration?>
               <id>validate</id>
               <phase>validate</phase>
               <goals>
