@@ -15,6 +15,7 @@ import static org.mockito.Mockito.when;
 
 import com.vova.laba.dto.user.UserDisplayDto;
 import com.vova.laba.dto.user.UserInfoDto;
+import com.vova.laba.exceptions.BadRequestException;
 import com.vova.laba.exceptions.NotFoundExcepcion;
 import com.vova.laba.model.City;
 import com.vova.laba.model.User;
@@ -155,6 +156,17 @@ class UserServiceTests {
     assertNotNull(updated);
     assertEquals(user, updated);
     verify(cache, times(1)).remove(1L);
+  }
+
+  @Test
+  void testUpdateUserThrow() {
+    when(userRepository.save(any(User.class))).thenThrow(new IllegalArgumentException());
+    when(cache.get(1L)).thenReturn(Optional.of(user));
+
+    Long id = user.getId();
+    UserInfoDto userInfo = modelMapper.map(user, UserInfoDto.class);
+    assertThrows(BadRequestException.class, () -> userService.updateUser(id, userInfo));
+    verify(cache, times(1)).put(id, user);
   }
 
   @Test

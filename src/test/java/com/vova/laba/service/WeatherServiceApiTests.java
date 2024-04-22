@@ -22,6 +22,7 @@ import com.vova.laba.dto.openweatherapi.WindData;
 import com.vova.laba.dto.weather.WeatherCreateDto;
 import com.vova.laba.dto.weather.WeatherDisplayDto;
 import com.vova.laba.dto.weather.WeatherInfoDto;
+import com.vova.laba.exceptions.ApiException;
 import com.vova.laba.exceptions.BadRequestException;
 import com.vova.laba.model.City;
 import com.vova.laba.model.Weather;
@@ -144,6 +145,27 @@ class WeatherServiceApiTests {
   }
 
   @Test
+  void testGetWeatherEmpty() {
+    Optional<CityCoordinatesResponse> coords = Optional.empty();
+    assertThrows(BadRequestException.class, () -> weatherApiService.getWeather(coords));
+
+    CityCoordinatesResponse cityCoordinates = new CityCoordinatesResponse();
+    cityCoordinates.setLat(51.5073219f);
+    cityCoordinates.setLon(-0.1276474f);
+    Map<String, String> uriVariables = new HashMap<>();
+    uriVariables.put("lat", Float.toString(51.5073219f));
+    uriVariables.put("lon", Float.toString(-0.1276474f));
+    uriVariables.put("key", null);
+    ResponseEntity<OpenWeatherReport> weatherReport =
+        new ResponseEntity<OpenWeatherReport>(HttpStatus.OK);
+    when(restTemplate.getForEntity(anyString(), eq(OpenWeatherReport.class), eq(uriVariables)))
+        .thenReturn(weatherReport);
+
+    Optional<CityCoordinatesResponse> cityCoordsOptional = Optional.of(cityCoordinates);
+    assertThrows(ApiException.class, () -> weatherApiService.getWeather(cityCoordsOptional));
+  }
+
+  @Test
   void testGetFiveDaysWeather() {
     Optional<CityCoordinatesResponse> coords = Optional.empty();
     assertThrows(BadRequestException.class, () -> weatherApiService.getFiveDaysWeather(coords));
@@ -177,8 +199,55 @@ class WeatherServiceApiTests {
     assertTrue(result.isPresent());
     assertEquals(5, result.get().size());
     result.get().get(1).setDate(new WeatherDate());
-    ;
     assertEquals(modelMapper.map(weather, WeatherInfoDto.class), result.get().get(1));
+  }
+
+  @Test
+  void testGetFiveDaysWeatherEmptyBody() {
+    Optional<CityCoordinatesResponse> coords = Optional.empty();
+    assertThrows(BadRequestException.class, () -> weatherApiService.getFiveDaysWeather(coords));
+
+    CityCoordinatesResponse cityCoordinates = new CityCoordinatesResponse();
+    cityCoordinates.setLat(51.5073219f);
+    cityCoordinates.setLon(-0.1276474f);
+    Map<String, String> uriVariables = new HashMap<>();
+    uriVariables.put("lat", Float.toString(51.5073219f));
+    uriVariables.put("lon", Float.toString(-0.1276474f));
+    uriVariables.put("key", null);
+    ResponseEntity<OpenWeatherFiveDaysReport> weatherReport =
+        new ResponseEntity<OpenWeatherFiveDaysReport>(HttpStatus.OK);
+    when(restTemplate.getForEntity(
+            anyString(), eq(OpenWeatherFiveDaysReport.class), eq(uriVariables)))
+        .thenReturn(weatherReport);
+
+    Optional<CityCoordinatesResponse> cityCoordsOptional = Optional.of(cityCoordinates);
+    assertThrows(
+        ApiException.class, () -> weatherApiService.getFiveDaysWeather(cityCoordsOptional));
+  }
+
+  @Test
+  void testGetFiveDaysWeatherEmptyList() {
+    Optional<CityCoordinatesResponse> coords = Optional.empty();
+    assertThrows(BadRequestException.class, () -> weatherApiService.getFiveDaysWeather(coords));
+
+    CityCoordinatesResponse cityCoordinates = new CityCoordinatesResponse();
+    cityCoordinates.setLat(51.5073219f);
+    cityCoordinates.setLon(-0.1276474f);
+    Map<String, String> uriVariables = new HashMap<>();
+    uriVariables.put("lat", Float.toString(51.5073219f));
+    uriVariables.put("lon", Float.toString(-0.1276474f));
+    uriVariables.put("key", null);
+    OpenWeatherFiveDaysReport fiveDaysReport = new OpenWeatherFiveDaysReport();
+    fiveDaysReport.setList(new OpenWeatherReport[0]);
+    ResponseEntity<OpenWeatherFiveDaysReport> weatherReport =
+        new ResponseEntity<OpenWeatherFiveDaysReport>(fiveDaysReport, HttpStatus.OK);
+    when(restTemplate.getForEntity(
+            anyString(), eq(OpenWeatherFiveDaysReport.class), eq(uriVariables)))
+        .thenReturn(weatherReport);
+
+    Optional<CityCoordinatesResponse> cityCoordsOptional = Optional.of(cityCoordinates);
+    assertThrows(
+        ApiException.class, () -> weatherApiService.getFiveDaysWeather(cityCoordsOptional));
   }
 
   @Test
