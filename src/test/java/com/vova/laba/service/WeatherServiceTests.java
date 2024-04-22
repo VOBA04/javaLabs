@@ -1,4 +1,4 @@
-package com.vova.laba;
+package com.vova.laba.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -15,6 +15,7 @@ import static org.mockito.Mockito.when;
 
 import com.vova.laba.dto.weather.WeatherCreateDto;
 import com.vova.laba.dto.weather.WeatherDisplayDto;
+import com.vova.laba.exceptions.BadRequestException;
 import com.vova.laba.exceptions.NotFoundExcepcion;
 import com.vova.laba.model.City;
 import com.vova.laba.model.Weather;
@@ -128,6 +129,7 @@ class WeatherServiceTests {
   void testSaveWeather() {
     when(weatherRepository.save(any(Weather.class))).thenReturn(weather);
     when(cityRepository.findById(1L)).thenReturn(Optional.of(city));
+    when(cityRepository.findById(2L)).thenReturn(Optional.empty());
 
     WeatherCreateDto weatherCreateDto = modelMapper.map(weather, WeatherCreateDto.class);
     weatherCreateDto.setCityId(city.getId());
@@ -136,6 +138,8 @@ class WeatherServiceTests {
 
     assertNotNull(result);
     assertEquals(weather, result);
+    weatherCreateDto.setCityId(2L);
+    assertThrows(BadRequestException.class, () -> weatherService.saveWeather(weatherCreateDto));
   }
 
   @Test

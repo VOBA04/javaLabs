@@ -1,5 +1,5 @@
 weatherservice:
-  key: ${KEY}
+  key: ${KEY:key}
 
 spring:
   jpa:

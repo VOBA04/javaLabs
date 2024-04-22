@@ -141,13 +141,13 @@ public class CityServiceImpl implements CityService {
   @Override
   public Optional<CityDispalyWithWeather> getCityWeatherByTemperature(
       Long cityId, Float minTemp, Float maxTemp) throws NotFoundExcepcion {
-    CityDispalyWithWeather city =
-        modelMapper.map(cityRepository.findById(cityId).orElse(null), CityDispalyWithWeather.class);
+    City cityModel = cityRepository.findById(cityId).orElse(null);
     Optional<List<Weather>> weather =
         weatherRepository.findWeatherByCityIdAndTemperature(cityId, minTemp, maxTemp);
-    if (city == null) {
+    if (cityModel == null) {
       throw new NotFoundExcepcion(cityErrorMessage, cityId);
     }
+    CityDispalyWithWeather city = modelMapper.map(cityModel, CityDispalyWithWeather.class);
     if (!weather.isPresent()) {
       throw new NotFoundExcepcion("There is no weather with a set temperature");
     }

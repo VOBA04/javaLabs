@@ -1,4 +1,4 @@
-package com.vova.laba;
+package com.vova.laba.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -161,18 +161,22 @@ class UserServiceTests {
   void testDeleteUser() {
     doNothing().when(userRepository).deleteById(1L);
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+    when(userRepository.findById(2L)).thenReturn(Optional.empty());
 
     User result = modelMapper.map(userService.deleteUser(1L), User.class);
 
     assertEquals(user, result);
     verify(userRepository, times(1)).deleteById(1L);
     verify(cache, times(1)).remove(1L);
+    assertThrows(NotFoundExcepcion.class, () -> userService.deleteUser(2L));
   }
 
   @Test
   void testAddCityToUser() {
     when(cityRepository.findById(1L)).thenReturn(Optional.of(city));
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+    when(cityRepository.findById(2L)).thenReturn(Optional.empty());
+    when(userRepository.findById(2L)).thenReturn(Optional.empty());
     when(cache.get(1L)).thenReturn(Optional.empty());
     user.addCity(city);
     when(userRepository.save(any(User.class))).thenReturn(user);
@@ -182,6 +186,8 @@ class UserServiceTests {
 
     assertEquals(user, result);
     verify(cache, times(1)).put(1L, user);
+    assertThrows(NotFoundExcepcion.class, () -> userService.addCityToUser(2L, 1L));
+    assertThrows(NotFoundExcepcion.class, () -> userService.addCityToUser(1L, 2L));
 
     user.deleteCity(city.getId());
   }
@@ -191,6 +197,7 @@ class UserServiceTests {
     when(userRepository.save(any(User.class))).thenReturn(user);
     user.addCity(city);
     when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+    when(userRepository.findById(2L)).thenReturn(Optional.empty());
     when(cache.get(1L)).thenReturn(Optional.empty());
 
     User result =
@@ -199,5 +206,6 @@ class UserServiceTests {
 
     assertEquals(user, result);
     verify(cache, times(1)).put(1L, user);
+    assertThrows(NotFoundExcepcion.class, () -> userService.removeCityFromUser(2L, 1L));
   }
 }

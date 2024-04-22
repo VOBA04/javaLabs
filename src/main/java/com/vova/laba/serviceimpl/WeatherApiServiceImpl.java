@@ -38,22 +38,26 @@ public class WeatherApiServiceImpl implements WeatherApiService {
   private final CityService cityService;
   private final WeatherService weatherService;
   private final ModelMapper modelMapper;
+  private final RestTemplate restTemplate;
 
   private String cityName = "Wrong city name";
 
   @Autowired
   public WeatherApiServiceImpl(
-      CityService cityService, WeatherService weatherService, ModelMapper modelMapper) {
+      CityService cityService,
+      WeatherService weatherService,
+      ModelMapper modelMapper,
+      RestTemplate restTemplate) {
     this.cityService = cityService;
     this.weatherService = weatherService;
     this.modelMapper = modelMapper;
+    this.restTemplate = restTemplate;
   }
 
   @Logging
   @Override
   public Optional<CityCoordinatesResponse> getCoordinates(String city) throws BadRequestException {
     String apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q={city}&limit=1&appid={key}";
-    RestTemplate restTemplate = new RestTemplate();
     Map<String, String> uriVariables = new HashMap<>();
     uriVariables.put("city", city);
     uriVariables.put("key", key);
@@ -82,7 +86,6 @@ public class WeatherApiServiceImpl implements WeatherApiService {
     CityCoordinatesResponse coord = coordOptional.get();
     String apiUrl =
         "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={key}&units=metric";
-    RestTemplate restTemplate = new RestTemplate();
     Map<String, String> uriVariables = new HashMap<>();
     uriVariables.put("lat", coord.getLat().toString());
     uriVariables.put("lon", coord.getLon().toString());
@@ -116,7 +119,6 @@ public class WeatherApiServiceImpl implements WeatherApiService {
     CityCoordinatesResponse coord = coordOptional.get();
     String apiUrl =
         "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={key}&units=metric";
-    RestTemplate restTemplate = new RestTemplate();
     Map<String, String> uriVariables = new HashMap<>();
     uriVariables.put("lat", coord.getLat().toString());
     uriVariables.put("lon", coord.getLon().toString());

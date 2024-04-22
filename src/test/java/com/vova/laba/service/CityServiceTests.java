@@ -1,4 +1,4 @@
-package com.vova.laba;
+package com.vova.laba.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -6,15 +6,20 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.vova.laba.dto.city.CityDispalyWithWeather;
 import com.vova.laba.dto.city.CityDisplayDto;
 import com.vova.laba.dto.city.CityInfoDto;
+import com.vova.laba.dto.city.CityWeatherInfoDto;
+import com.vova.laba.exceptions.BadRequestException;
 import com.vova.laba.exceptions.NotFoundExcepcion;
 import com.vova.laba.model.City;
 import com.vova.laba.model.Weather;
@@ -147,6 +152,10 @@ class CityServiceTests {
     assertFalse(result.get().isEmpty());
     assertEquals(modelMapper.map(city, CityDisplayDto.class), result.get().get(1));
     verify(cityRepository, times(3)).save(any(City.class));
+    CityInfoDto cityInfoDto = new CityInfoDto();
+    assertThrows(BadRequestException.class, () -> cityService.saveCity(cityInfoDto));
+    cityInfoDto.setCityName("");
+    assertThrows(BadRequestException.class, () -> cityService.saveCity(cityInfoDto));
   }
 
   @Test
@@ -167,12 +176,14 @@ class CityServiceTests {
   void testDeleteCity() {
     doNothing().when(cityRepository).deleteById(1L);
     when(cityRepository.findById(1L)).thenReturn(Optional.of(city));
+    when(cityRepository.findById(2L)).thenReturn(Optional.empty());
 
     City result = modelMapper.map(cityService.deleteCity(1L).get(), City.class);
 
     assertEquals(city, result);
     verify(cityRepository, times(1)).deleteById(1L);
     verify(cache, times(1)).remove(1L);
+    assertThrows(NotFoundExcepcion.class, () -> cityService.deleteCity(2L));
   }
 
   @Test
@@ -180,6 +191,7 @@ class CityServiceTests {
     weather.setCity(new City());
     city.setWeather(Arrays.asList(weather));
     when(cityRepository.findById(1L)).thenReturn(Optional.of(city));
+    when(cityRepository.findById(2L)).thenReturn(Optional.empty());
 
     List<Weather> result =
         Arrays.asList(
@@ -188,8 +200,37 @@ class CityServiceTests {
 
     assertEquals(1, result.size());
     assertEquals(weather, result.get(0));
+    assertThrows(NotFoundExcepcion.class, () -> cityService.getAllCityWeather(2L));
 
     city.setWeather(null);
     weather.setCity(city);
+  }
+
+  @Test
+  void testGetCityWeatherByTemperature() {
+    when(cityRepository.findById(1L)).thenReturn(Optional.of(city));
+    when(weatherRepository.findWeatherByCityIdAndTemperature(eq(1L), anyFloat(), anyFloat()))
+        .thenReturn(Optional.of(Arrays.asList(weather, weather, weather)));
+
+    Optional<CityDispalyWithWeather> result =
+        cityService.getCityWeatherByTemperature(1L, -255f, 100f);
+
+    assertTrue(result.isPresent());
+    assertEquals(3, result.get().getWeather().size());
+    assertEquals(
+        modelMapper.map(weather, CityWeatherInfoDto.class), result.get().getWeather().get(1));
+  }
+
+  @Test
+  void testGetCityWeatherByTemperatureThrows() {
+    when(cityRepository.findById(1L)).thenReturn(Optional.of(city));
+    when(cityRepository.findById(2L)).thenReturn(Optional.empty());
+    when(weatherRepository.findWeatherByCityIdAndTemperature(anyLong(), anyFloat(), anyFloat()))
+        .thenReturn(Optional.empty());
+
+    assertThrows(
+        NotFoundExcepcion.class, () -> cityService.getCityWeatherByTemperature(2L, -255f, 100f));
+    assertThrows(
+        NotFoundExcepcion.class, () -> cityService.getCityWeatherByTemperature(1L, -255f, 100f));
   }
 }
