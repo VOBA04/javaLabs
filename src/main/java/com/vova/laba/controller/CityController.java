@@ -1,5 +1,6 @@
 package com.vova.laba.controller;
 
+import com.vova.laba.aspect.annotation.RequestCounting;
 import com.vova.laba.dto.city.CityDispalyWithWeather;
 import com.vova.laba.dto.city.CityDisplayDto;
 import com.vova.laba.dto.city.CityInfoDto;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v2/city")
+@RequestCounting
 public class CityController {
 
   private final CityService cityService;

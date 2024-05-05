@@ -1,6 +1,6 @@
 package com.vova.laba.serviceimpl;
 
-import com.vova.laba.aspect.Logging;
+import com.vova.laba.aspect.annotation.Logging;
 import com.vova.laba.dto.city.CityDisplayDto;
 import com.vova.laba.dto.city.CityInfoDto;
 import com.vova.laba.dto.openweatherapi.CityCoordinatesResponse;

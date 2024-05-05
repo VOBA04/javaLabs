@@ -1,5 +1,6 @@
 package com.vova.laba.controller;
 
+import com.vova.laba.aspect.annotation.RequestCounting;
 import com.vova.laba.dto.city.CityInfoDto;
 import com.vova.laba.dto.weather.WeatherInfoDto;
 import com.vova.laba.service.WeatherApiService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1/weather")
+@RequestCounting
 public class WeatherApiController {
 
   WeatherApiService weatherApiService;

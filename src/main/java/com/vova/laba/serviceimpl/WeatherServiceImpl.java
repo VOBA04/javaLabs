@@ -1,6 +1,6 @@
 package com.vova.laba.serviceimpl;
 
-import com.vova.laba.aspect.Logging;
+import com.vova.laba.aspect.annotation.Logging;
 import com.vova.laba.dto.weather.WeatherCreateDto;
 import com.vova.laba.dto.weather.WeatherDisplayDto;
 import com.vova.laba.exceptions.BadRequestException;

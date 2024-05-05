@@ -1,5 +1,6 @@
 package com.vova.laba.controller;
 
+import com.vova.laba.aspect.annotation.RequestCounting;
 import com.vova.laba.dto.user.UserDisplayDto;
 import com.vova.laba.dto.user.UserInfoDto;
 import com.vova.laba.service.UserService;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v2/user")
+@RequestCounting
 public class UserController {
 
   private UserService userService;
