@@ -51,6 +51,12 @@ public class Weather {
   @Column(name = "year")
   Integer year;
 
+  @Column(name = "weatherDescription")
+  String weatherDescription;
+
+  @Column(name = "weatherIcon")
+  String weatherIcon;
+
   @ManyToOne
   @JoinColumn(name = "city_id", nullable = false)
   private City city = new City();

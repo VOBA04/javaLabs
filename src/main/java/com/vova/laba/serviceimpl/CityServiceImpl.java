@@ -14,12 +14,12 @@ import com.vova.laba.repository.WeatherRepository;
 import com.vova.laba.service.CityService;
 import com.vova.laba.utils.cache.GenericCache;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,7 +35,6 @@ public class CityServiceImpl implements CityService {
 
   private String cityErrorMessage = "There is no city with id=";
 
-  @Autowired
   public CityServiceImpl(
       CityRepository cityRepository,
       WeatherRepository weatherRepository,
@@ -142,16 +141,30 @@ public class CityServiceImpl implements CityService {
   public Optional<CityDispalyWithWeather> getCityWeatherByTemperature(
       Long cityId, Float minTemp, Float maxTemp) throws NotFoundExcepcion {
     City cityModel = cityRepository.findById(cityId).orElse(null);
-    Optional<List<Weather>> weather =
-        weatherRepository.findWeatherByCityIdAndTemperature(cityId, minTemp, maxTemp);
+    List<Weather> weather =
+        weatherRepository
+            .findWeatherByCityIdAndTemperature(cityId, minTemp, maxTemp)
+            .orElse(new ArrayList<>());
     if (cityModel == null) {
       throw new NotFoundExcepcion(cityErrorMessage, cityId);
     }
     CityDispalyWithWeather city = modelMapper.map(cityModel, CityDispalyWithWeather.class);
-    if (!weather.isPresent()) {
-      throw new NotFoundExcepcion("There is no weather with a set temperature");
+    city.setWeather(Arrays.asList(modelMapper.map(weather, CityWeatherInfoDto[].class)));
+    return Optional.of(city);
+  }
+
+  @Logging
+  @Override
+  public Optional<CityDispalyWithWeather> getCityWeatherSorted(Long cityId)
+      throws NotFoundExcepcion {
+    City cityModel = cityRepository.findById(cityId).orElse(null);
+    if (cityModel == null) {
+      throw new NotFoundExcepcion(cityErrorMessage, cityId);
     }
-    city.setWeather(Arrays.asList(modelMapper.map(weather.get(), CityWeatherInfoDto[].class)));
+    List<Weather> weather =
+        weatherRepository.findWeatherByCityIdSorted(cityId).orElse(new ArrayList<>());
+    CityDispalyWithWeather city = modelMapper.map(cityModel, CityDispalyWithWeather.class);
+    city.setWeather(Arrays.asList(modelMapper.map(weather, CityWeatherInfoDto[].class)));
     return Optional.of(city);
   }
 }

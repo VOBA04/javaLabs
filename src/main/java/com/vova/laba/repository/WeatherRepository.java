@@ -15,4 +15,13 @@ public interface WeatherRepository extends JpaRepository<Weather, Long> {
           + " AND w.temp >= :minTemp AND w.temp <= :maxTemp")
   Optional<List<Weather>> findWeatherByCityIdAndTemperature(
       @Param("city") Long cityId, @Param("minTemp") Float minTemp, @Param("maxTemp") Float maxTemp);
+
+  @Query(
+      "SELECT w FROM Weather as w ORDER BY w.city.cityName ASC, w.year ASC, w.month ASC, w.day"
+          + " ASC")
+  Optional<List<Weather>> findAllSorted();
+
+  @Query(
+      "SELECT w FROM Weather w WHERE w.city.id = :city ORDER BY w.year ASC, w.month ASC, w.day ASC")
+  Optional<List<Weather>> findWeatherByCityIdSorted(@Param("city") Long cityId);
 }

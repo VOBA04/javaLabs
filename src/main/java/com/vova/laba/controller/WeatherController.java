@@ -5,8 +5,8 @@ import com.vova.laba.dto.weather.WeatherCreateDto;
 import com.vova.laba.dto.weather.WeatherDisplayDto;
 import com.vova.laba.service.WeatherService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,11 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v2/weather")
 @RequestCounting
+@CrossOrigin
 public class WeatherController {
 
   private WeatherService weatherService;
 
-  @Autowired
   public WeatherController(WeatherService weatherService) {
     this.weatherService = weatherService;
   }
@@ -31,6 +31,11 @@ public class WeatherController {
   @GetMapping("/all")
   public ResponseEntity<List<WeatherDisplayDto>> getAllWeather() {
     return ResponseEntity.of(weatherService.getAllWeather());
+  }
+
+  @GetMapping("/all/sorted")
+  public ResponseEntity<List<WeatherDisplayDto>> getAllWeatherSorted() {
+    return ResponseEntity.of(weatherService.getAllWeatherSorted());
   }
 
   @GetMapping("/{id}")

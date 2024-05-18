@@ -16,6 +16,8 @@ public class WeatherInfoDto {
   private Integer deg;
   private Integer clouds;
   private WeatherDate date = new WeatherDate();
+  private String weatherDescription;
+  private String weatherIcon;
 
   public void setDay(Integer day) {
     date.setDay(day);

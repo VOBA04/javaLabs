@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -42,7 +41,6 @@ public class WeatherApiServiceImpl implements WeatherApiService {
 
   private String cityName = "Wrong city name";
 
-  @Autowired
   public WeatherApiServiceImpl(
       CityService cityService,
       WeatherService weatherService,
@@ -85,7 +83,7 @@ public class WeatherApiServiceImpl implements WeatherApiService {
     }
     CityCoordinatesResponse coord = coordOptional.get();
     String apiUrl =
-        "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={key}&units=metric";
+        "https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={key}&units=metric&lang=ru";
     Map<String, String> uriVariables = new HashMap<>();
     uriVariables.put("lat", coord.getLat().toString());
     uriVariables.put("lon", coord.getLon().toString());
@@ -101,6 +99,8 @@ public class WeatherApiServiceImpl implements WeatherApiService {
       weatherResponse.setSpeed(responseBody.getWind().getSpeed());
       weatherResponse.setDeg(responseBody.getWind().getDeg());
       weatherResponse.setClouds(responseBody.getClouds().getAll());
+      weatherResponse.setWeatherDescription(responseBody.getWeather()[0].getDescription());
+      weatherResponse.setWeatherIcon(responseBody.getWeather()[0].getIcon());
       String date =
           new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date(responseBody.getDt() * 1000));
       weatherResponse.setDate(WeatherDate.stringToDate(date));
@@ -118,7 +118,7 @@ public class WeatherApiServiceImpl implements WeatherApiService {
     }
     CityCoordinatesResponse coord = coordOptional.get();
     String apiUrl =
-        "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={key}&units=metric";
+        "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={key}&units=metric&lang=ru";
     Map<String, String> uriVariables = new HashMap<>();
     uriVariables.put("lat", coord.getLat().toString());
     uriVariables.put("lon", coord.getLon().toString());
@@ -138,6 +138,8 @@ public class WeatherApiServiceImpl implements WeatherApiService {
           weatherResponse.setSpeed(responseList[i].getWind().getSpeed());
           weatherResponse.setDeg(responseList[i].getWind().getDeg());
           weatherResponse.setClouds(responseList[i].getClouds().getAll());
+          weatherResponse.setWeatherDescription(responseList[i].getWeather()[0].getDescription());
+          weatherResponse.setWeatherIcon((responseList[i].getWeather()[0].getIcon()));
           String date =
               new SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
                   .format(new Date(responseList[i].getDt() * 1000));

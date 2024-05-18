@@ -6,8 +6,8 @@ import com.vova.laba.dto.city.CityDisplayDto;
 import com.vova.laba.dto.city.CityInfoDto;
 import com.vova.laba.service.CityService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v2/city")
 @RequestCounting
+@CrossOrigin
 public class CityController {
 
   private final CityService cityService;
 
-  @Autowired
   public CityController(CityService cityService) {
     this.cityService = cityService;
   }
@@ -72,5 +72,10 @@ public class CityController {
       @RequestParam(name = "minTemp", defaultValue = "-273") Float minTemp,
       @RequestParam(name = "maxTemp", defaultValue = "100") Float maxTemp) {
     return ResponseEntity.of(cityService.getCityWeatherByTemperature(id, minTemp, maxTemp));
+  }
+
+  @GetMapping("/weather/sorted/{id}")
+  public ResponseEntity<CityDispalyWithWeather> getCityWeatherSorted(@PathVariable Long id) {
+    return ResponseEntity.of(cityService.getCityWeatherSorted(id));
   }
 }

@@ -11,11 +11,11 @@ import com.vova.laba.repository.WeatherRepository;
 import com.vova.laba.service.WeatherService;
 import com.vova.laba.utils.cache.GenericCache;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,7 +31,6 @@ public class WeatherServiceImpl implements WeatherService {
 
   private String weatherErrorMessage = "There is no weather with id=";
 
-  @Autowired
   public WeatherServiceImpl(
       WeatherRepository weatherRepository,
       ModelMapper modelMapper,
@@ -63,9 +62,34 @@ public class WeatherServiceImpl implements WeatherService {
 
   @Logging
   @Override
+  public Optional<List<WeatherDisplayDto>> getAllWeatherSorted() {
+    List<Weather> weathers = weatherRepository.findAllSorted().orElse(new ArrayList<>());
+    return Optional.of(Arrays.asList(modelMapper.map(weathers, WeatherDisplayDto[].class)));
+  }
+
+  @Logging
+  @Override
   public Optional<WeatherDisplayDto> saveWeather(WeatherCreateDto weather)
       throws BadRequestException {
-    if (!cityRepository.findById(weather.getCityId()).isPresent()) {
+    if (weather.getCityId() == null
+        || weather.getTemp() == null
+        || weather.getPressure() == null
+        || weather.getHumidity() == 0
+        || weather.getSpeed() == null
+        || weather.getDeg() == null
+        || weather.getClouds() == null
+        || !cityRepository.findById(weather.getCityId()).isPresent()
+        || !(weather.getTemp() > -273
+            && weather.getTemp() < 100
+            && weather.getPressure() > 0
+            && weather.getHumidity() >= 0
+            && weather.getHumidity() <= 100
+            && weather.getSpeed() >= 0
+            && weather.getSpeed() <= 120
+            && weather.getDeg() >= 0
+            && weather.getDeg() <= 359
+            && weather.getClouds() >= 0
+            && weather.getClouds() <= 100)) {
       throw new BadRequestException("Wrong weather parameters");
     }
     return Optional.of(
@@ -92,7 +116,25 @@ public class WeatherServiceImpl implements WeatherService {
   @Override
   public Optional<WeatherDisplayDto> updateWeather(Long id, WeatherCreateDto weather)
       throws BadRequestException {
-    if (!cityRepository.findById(weather.getCityId()).isPresent()) {
+    if (weather.getCityId() == null
+        || weather.getTemp() == null
+        || weather.getPressure() == null
+        || weather.getHumidity() == 0
+        || weather.getSpeed() == null
+        || weather.getDeg() == null
+        || weather.getClouds() == null
+        || !cityRepository.findById(weather.getCityId()).isPresent()
+        || !(weather.getTemp() > -273
+            && weather.getTemp() < 100
+            && weather.getPressure() > 0
+            && weather.getHumidity() >= 0
+            && weather.getHumidity() <= 100
+            && weather.getSpeed() >= 0
+            && weather.getSpeed() <= 120
+            && weather.getDeg() >= 0
+            && weather.getDeg() <= 359
+            && weather.getClouds() >= 0
+            && weather.getClouds() <= 100)) {
       throw new BadRequestException("Wrong weather parameters");
     }
     Weather weatherModel = modelMapper.map(weather, Weather.class);

@@ -27,4 +27,7 @@ public interface CityService {
 
   public Optional<CityDispalyWithWeather> getCityWeatherByTemperature(
       Long cityId, Float minTemp, Float maxTemp) throws NotFoundExcepcion;
+
+  public Optional<CityDispalyWithWeather> getCityWeatherSorted(Long cityId)
+      throws NotFoundExcepcion;
 }

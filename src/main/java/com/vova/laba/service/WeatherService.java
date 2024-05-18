@@ -13,6 +13,8 @@ public interface WeatherService {
 
   public Optional<WeatherDisplayDto> getWeatherById(Long id) throws NotFoundExcepcion;
 
+  public Optional<List<WeatherDisplayDto>> getAllWeatherSorted();
+
   public Optional<WeatherDisplayDto> saveWeather(WeatherCreateDto weather)
       throws BadRequestException;
 
