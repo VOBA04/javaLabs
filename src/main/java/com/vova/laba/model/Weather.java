@@ -11,7 +11,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "weather")
@@ -59,6 +61,8 @@ public class Weather {
 
   @ManyToOne
   @JoinColumn(name = "city_id", nullable = false)
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
   private City city = new City();
 
   public void setDate(WeatherDate date) {

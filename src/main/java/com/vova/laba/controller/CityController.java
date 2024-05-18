@@ -35,6 +35,11 @@ public class CityController {
     return ResponseEntity.of(cityService.getAllCities());
   }
 
+  @GetMapping("/all/sorted")
+  public ResponseEntity<List<CityDisplayDto>> getAllCitiesSorted() {
+    return ResponseEntity.of(cityService.getAllCitiesSorted());
+  }
+
   @GetMapping("/{id}")
   public ResponseEntity<CityDisplayDto> getCityById(@PathVariable("id") Long id) {
     return ResponseEntity.of(cityService.getCityById(id));

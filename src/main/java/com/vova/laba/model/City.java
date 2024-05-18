@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "city")
@@ -35,10 +36,13 @@ public class City {
   @OneToMany(
       mappedBy = "city",
       cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
   private List<Weather> weather;
 
   @ManyToMany
   @EqualsAndHashCode.Exclude
+  @ToString.Exclude
   @JoinTable(
       name = "city_user",
       joinColumns = @JoinColumn(name = "city_id"),

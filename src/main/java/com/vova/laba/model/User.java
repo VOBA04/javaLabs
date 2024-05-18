@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "users")
@@ -30,6 +31,7 @@ public class User {
 
   @ManyToMany(mappedBy = "users", cascade = CascadeType.MERGE)
   @EqualsAndHashCode.Exclude
+  @ToString.Exclude
   private Set<City> cities = new HashSet<>();
 
   public void addCity(City city) {

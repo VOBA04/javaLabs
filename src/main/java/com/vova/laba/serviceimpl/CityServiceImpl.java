@@ -55,6 +55,13 @@ public class CityServiceImpl implements CityService {
 
   @Logging
   @Override
+  public Optional<List<CityDisplayDto>> getAllCitiesSorted() {
+    List<City> cities = cityRepository.findAllSorted();
+    return Optional.of(Arrays.asList(modelMapper.map(cities, CityDisplayDto[].class)));
+  }
+
+  @Logging
+  @Override
   public Optional<CityDisplayDto> getCityById(Long id) throws NotFoundExcepcion {
     City city = cache.get(id).orElseGet(() -> cityRepository.findById(id).orElse(null));
     if (city == null) {

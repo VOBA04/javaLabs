@@ -12,6 +12,8 @@ public interface CityService {
 
   public Optional<List<CityDisplayDto>> getAllCities();
 
+  public Optional<List<CityDisplayDto>> getAllCitiesSorted();
+
   public Optional<CityDisplayDto> getCityById(Long id) throws NotFoundExcepcion;
 
   public Optional<CityDisplayDto> saveCity(CityInfoDto city) throws BadRequestException;
