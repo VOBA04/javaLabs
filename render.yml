@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: web
+    runtime: docker
+    region: frankfurt
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: SPRING_DB_USER
+        fromDatabase:
+          name: database
+          property: user
+      - key: SPRING_DB_PASSWORD
+        fromDatabase:
+          name: database
+          property: password
+      - key: SPRING_DB_URL
+        value: postgresql://${SPRING_DB_HOST}:${SPRING_DB_PORT}/${SPRING_DB_DATABASE}
+
+databases:
+  - name: database
+    region: frankfurt
+    plan: free
