@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - db
+    environment:
+      SPRING_DB_URL: postgresql://db:5432/java
+      KEY: ${KEY}
+    ports:
+      - 8080:8080
+
+  db:
+    image: postgres:14-alpine
+    container_name: db
+    environment:
+      POSTGRES_DB: java
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+  front:
+    build: ../laba_front/laba_weather
+    ports:
+      - 5173:5173
